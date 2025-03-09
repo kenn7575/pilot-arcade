@@ -76,3 +76,110 @@ model Authenticator {
  
   @@id([userId, credentialID])
 }
+
+model Player {
+  id           String     @id @default(uuid())
+  username     String     @unique
+  email        String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  xp           Int        @default(0)
+  coins        Int        @default(0)
+  scores       Score[]
+  achievements PlayerAchievement[]
+  gameSessions GameSession[]
+
+  Leaderboard Leaderboard[]
+}
+
+model Game {
+  id          String    @id @default(uuid())
+  title       String    @unique
+  description String?
+  releaseDate DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  scores      Score[]
+  achievements Achievement[]
+  gameSessions GameSession[]
+
+  Leaderboard Leaderboard[]
+}
+
+model Score {
+  id        String  @id @default(uuid())
+  playerId  String
+  gameId    String
+  points    Int
+  timestamp DateTime @default(now())
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, gameId, timestamp]) // Prevent duplicate scores at the same moment
+}
+
+model Achievement {
+  id          String  @id @default(uuid())
+  gameId      String
+  name        String
+  description String?
+  image       String?
+  createdAt   DateTime @default(now())
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  PlayerAchievement PlayerAchievement[]
+}
+
+model PlayerAchievement {
+  id            String   @id @default(uuid())
+  playerId      String
+  achievementId String
+  unlockedAt    DateTime @default(now())
+
+  player       Player       @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  achievement  Achievement  @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, achievementId]) // Ensure achievements are only unlocked once per player
+}
+
+model GameSession {
+  id        String   @id @default(uuid())
+  playerId  String
+  gameId    String
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  player    Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  game      Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameStats GameStats?
+}
+
+model GameStats {
+  id               String  @id @default(uuid())
+  sessionId        String  @unique
+  score            Int     @default(0)
+  obstaclesAvoided Int     @default(0)
+  powerUpsCollected Int    @default(0)
+  timeSurvived     Int     @default(0) // Time in seconds
+  createdAt        DateTime @default(now())
+
+  gameSession GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+
+model Leaderboard {
+  id       String  @id @default(uuid())
+  gameId   String
+  playerId String
+  rank     Int
+  score    Int
+  updatedAt DateTime @default(now())
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, playerId]) // Each player should have only one leaderboard entry per game
+}

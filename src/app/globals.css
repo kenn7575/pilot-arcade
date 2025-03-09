@@ -52,8 +52,8 @@
   --card-foreground: oklch(14% 0 290);
   --popover: oklch(100% 0 0);
   --popover-foreground: oklch(14% 0 290);
-  --primary: oklch(59% 0.2 18);
-  --primary-foreground: oklch(97% 0 12);
+  --primary:oklch(60.02% 0.2323 24.1);
+  --primary-foreground: oklch(100% 0 0);
   --secondary: oklch(97% 0 290);
   --secondary-foreground: oklch(21% 0 290);
   --muted: oklch(97% 0 290);
@@ -90,8 +90,8 @@
     --card-foreground: oklch(96% 0 0);
     --popover: oklch(20% 0 0);
     --popover-foreground: oklch(96% 0 0);
-    --primary: oklch(59% 0.2 18);
-    --primary-foreground: oklch(97% 0 12);
+    --primary: oklch(60.02% 0.2323 24.1);
+    --primary-foreground:oklch(100% 0 0);
     --secondary: oklch(27% 0 290);
     --secondary-foreground: oklch(98% 0 0);
     --muted: oklch(27% 0 0);
@@ -125,5 +125,14 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+ 
+}
+@keyframes wave {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(1000px);
   }
 }
