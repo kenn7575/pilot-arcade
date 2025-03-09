@@ -42,7 +42,7 @@ export default async function RootLayout({
   } else playerInfo = null;
   return (
     <html lang="en">
-      <SessionProvider basePath={"/auth"} session={session}>
+      <SessionProvider session={session}>
         <body className={`antialiased`}>
           <SidebarProvider
             style={
@@ -53,14 +53,14 @@ export default async function RootLayout({
           >
             <AppSidebar />
             <SidebarInset>
-              <header className="sticky top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4">
+              <header className="sticky h-14 top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator className="mr-2 h-4" />
                 {/* if player is logged in show Inventory, else sugguest login */}
 
                 <NavigationMenuInventory player={playerInfo} />
               </header>
-              <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+              <div className="flex flex-1 flex-col gap-4 ">{children}</div>
             </SidebarInset>
           </SidebarProvider>
           <Analytics />

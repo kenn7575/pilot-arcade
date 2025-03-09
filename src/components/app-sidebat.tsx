@@ -168,7 +168,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold font-[--]">Pilot Arcade</span>
+                    <span className="truncate font-semibold font-[--]">
+                      Pilot Arcade
+                    </span>
                     <span className="truncate text-xs">
                       Alle dine maritime spil, samlet et sted!
                     </span>
@@ -184,7 +186,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {links.map((link) => (
                   <SidebarMenuItem key={link.title}>
-                    <Link href={link.url}>
+                    <Link href={`/${link.url}`}>
                       <SidebarMenuButton
                         tooltip={{
                           children: link.title,

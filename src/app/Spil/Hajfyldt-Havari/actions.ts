@@ -6,6 +6,7 @@ import { SailorGameResultInput } from "@/lib/types";
 import { Coins } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
 
 const schema = z.object({
   score: z.number(),
@@ -20,14 +21,37 @@ export async function uploadScore(input: SailorGameResultInput) {
   console.log("🚀 ~ session:", session?.user);
 
   // validate input
-  if (!session?.user?.id) throw new Error("User not authenticated");
+  if (!session?.user?.id) return;
 
-  const data = schema.parse(input);
+  const result = schema.safeParse(input);
+  if (!result.success) return;
+  const data = result.data;
 
   const coins =
     Math.floor(data.score / 1000) + Math.floor(data.obsticlesAvoided / 10);
   const xp =
     Math.floor(data.score / 100) + Math.floor(data.obsticlesAvoided / 10);
+
+  const existingEntry = await prisma.leaderboard.findUnique({
+    where: { gameId_playerId: { gameId: GAME_ID, playerId: session.user.id } },
+  });
+
+  if (!existingEntry || data.score > existingEntry.score) {
+    return prisma.leaderboard.upsert({
+      where: {
+        gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
+      },
+      update: {
+        score: data.score,
+      },
+      create: {
+        gameId: GAME_ID,
+        playerId: session.user.id,
+        score: data.score,
+        rank: 0,
+      },
+    });
+  }
 
   Promise.all([
     await prisma.player.update({

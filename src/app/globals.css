@@ -135,4 +135,21 @@
   to {
     transform: translateY(1000px);
   }
+  
+}
+.min-h-view{
+  min-height: calc(100dvh - 3.5rem)
+}
+/* Add these rules to your global CSS */
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Safari */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  user-select: none;           /* Standard syntax */
+  touch-action: manipulation;  /* Disable double-tap to zoom */
+}
+
+.game-container {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: auto;
 }
