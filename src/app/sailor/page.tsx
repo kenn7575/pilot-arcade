@@ -4,14 +4,20 @@ import { useEffect, useState, useRef } from "react";
 import { Ship, Bot as Boat, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-
+import { uploadScore } from "./actions";
+import { SailorGameResultInput } from "@/lib/types";
+import { ribeye } from "@/lib/fonts";
 const GAME_WIDTH = 600;
 const GAME_HEIGHT = 600;
 const BOAT_SIZE = 60;
 const OBSTACLE_WIDTH = 60;
 const OBSTACLE_HEIGHT = 80;
 const GAME_SPEED = 5;
-const BOAT_SPEED = 8;
+const BOAT_TURNING_SPEED = 8;
+const BOAT_SPEED = 10; // pixels per frame
+
+const PIXELS_PER_MILE = 1609.34; // 1 mile = 1609.34 meters
+const KNOTS_CONVERSION = 1.15078; // 1 knot = 1.15078 miles per hour
 
 interface Obstacle {
   x: number;
@@ -27,8 +33,11 @@ export default function Game() {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [distance, setDistance] = useState(0); // distance in pixels
+  const [startedAt, setStartedAt] = useState(new Date());
   const gameLoopRef = useRef<number | null>(null);
   const keysPressed = useRef<{ [key: string]: boolean }>({});
+
   const handleKeyDown = (e: KeyboardEvent) => {
     keysPressed.current[e.key] = true;
   };
@@ -39,11 +48,13 @@ export default function Game() {
 
   const updateBoatPosition = () => {
     if (keysPressed.current["ArrowLeft"] || keysPressed.current["a"]) {
-      setBoatPosition((prev) => Math.max(BOAT_SIZE / 2, prev - BOAT_SPEED));
+      setBoatPosition((prev) =>
+        Math.max(BOAT_SIZE / 2, prev - BOAT_TURNING_SPEED)
+      );
     }
     if (keysPressed.current["ArrowRight"] || keysPressed.current["d"]) {
       setBoatPosition((prev) =>
-        Math.min(GAME_WIDTH - BOAT_SIZE / 2, prev + BOAT_SPEED)
+        Math.min(GAME_WIDTH - BOAT_SIZE / 2, prev + BOAT_TURNING_SPEED)
       );
     }
   };
@@ -73,6 +84,8 @@ export default function Game() {
     setObstaclesAvoided(0);
     setBoatPosition(GAME_WIDTH / 2);
     setIsPlaying(true);
+    setStartedAt(new Date());
+    setDistance(0); // reset distance
     keysPressed.current = {};
   };
 
@@ -108,8 +121,18 @@ export default function Game() {
         });
 
         setScore((prev) => prev + 1);
+        setDistance((prev) => prev + (BOAT_SPEED / 60) * KNOTS_CONVERSION); // update distance
 
         if (checkCollision(boatPosition, obstacles)) {
+          let sailorGameResultInput: SailorGameResultInput = {
+            score: score,
+            distance: distance / PIXELS_PER_MILE, // convert to miles
+            time: (new Date().getTime() - startedAt.getTime()) / 1000, // convert to seconds
+            obsticlesAvoided: obstacledAvoided,
+            startedPlayingAt: startedAt,
+            gameId: "1",
+          };
+          uploadScore(sailorGameResultInput);
           setGameOver(true);
           setIsPlaying(false);
         }
@@ -127,15 +150,22 @@ export default function Game() {
     }
   }, [isPlaying, gameOver, boatPosition, obstacles]);
 
+  const distanceInMiles = (distance / PIXELS_PER_MILE).toFixed(3);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-xl">
         <div className="mb-4 text-center">
-          <h1 className="text-3xl font-bold text-blue-900 mb-2">Sea Runner</h1>
+          <h1
+            className={`${ribeye.className} text-3xl font-bold text-blue-900 mb-2`}
+          >
+            Hajfyldt Havari
+          </h1>
           <p className="text-lg text-blue-700">Score: {score}</p>
           <p className="text-lg text-blue-700">
             Obstacles Avoided: {obstacledAvoided}
           </p>
+          <p className="text-lg text-blue-700">{distanceInMiles} Sømil</p>
         </div>
 
         <div

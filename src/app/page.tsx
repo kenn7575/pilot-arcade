@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { ribeye } from "@/lib/fonts";
 import Image from "next/image";
-import { ribeye } from "./layout";
 
 export default function Home() {
   return (

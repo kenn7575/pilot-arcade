@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Ribeye } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import {
@@ -19,18 +18,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const ribeye = Ribeye({
-  variable: "--font-ribeye",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
+import { NavigationMenuInventory } from "@/components/Invintory";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -43,10 +32,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  let playerInfo;
+  if (session?.user?.id) {
+    playerInfo = await prisma.player.findUnique({
+      where: {
+        userId: session?.user.id,
+      },
+    });
+  } else playerInfo = null;
   return (
     <html lang="en">
       <SessionProvider basePath={"/auth"} session={session}>
-        <body className={`${ribeye.variable}  antialiased`}>
+        <body className={`antialiased`}>
           <SidebarProvider
             style={
               {
@@ -56,20 +53,12 @@ export default async function RootLayout({
           >
             <AppSidebar />
             <SidebarInset>
-              <header className="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-4">
+              <header className="sticky top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4">
                 <SidebarTrigger className="-ml-1" />
                 <Separator className="mr-2 h-4" />
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    <BreadcrumbItem className="hidden md:block">
-                      <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className="hidden md:block" />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>Inbox</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
+                {/* if player is logged in show Inventory, else sugguest login */}
+
+                <NavigationMenuInventory player={playerInfo} />
               </header>
               <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
             </SidebarInset>
