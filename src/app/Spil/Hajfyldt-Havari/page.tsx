@@ -223,7 +223,14 @@ export default function Game() {
             gameId: "1",
           };
 
-          uploadScore(sailorGameResultInput);
+          uploadScore(sailorGameResultInput).then((result) => {
+            console.log("🚀 ~ uploadScore ~ result:", result);
+
+            if (result?.id) {
+              // Navigate to results page with session ID
+              window.location.href = `/Spil/Hajfyldt-Havari/results?sessionId=${result.id}`;
+            }
+          });
           setGameOver(true);
           setIsPlaying(false);
         }

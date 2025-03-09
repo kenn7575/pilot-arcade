@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SailorGameResultInput } from "@/lib/types";
+import { GameSession } from "@prisma/client";
 import { Coins } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -16,7 +17,9 @@ const schema = z.object({
   startedPlayingAt: z.coerce.date(),
 });
 
-export async function uploadScore(input: SailorGameResultInput) {
+export async function uploadScore(
+  input: SailorGameResultInput
+): Promise<GameSession | void> {
   let session = await auth();
   console.log("🚀 ~ session:", session?.user);
 
@@ -36,8 +39,10 @@ export async function uploadScore(input: SailorGameResultInput) {
     where: { gameId_playerId: { gameId: GAME_ID, playerId: session.user.id } },
   });
 
+  console.log("🚀 ~ existingEntry", existingEntry);
+  console.log("🚀 ~ data", data);
   if (!existingEntry || data.score > existingEntry.score) {
-    return prisma.leaderboard.upsert({
+    await prisma.leaderboard.upsert({
       where: {
         gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
       },
@@ -53,7 +58,7 @@ export async function uploadScore(input: SailorGameResultInput) {
     });
   }
 
-  Promise.all([
+  const [player, gameSession] = await Promise.all([
     await prisma.player.update({
       where: {
         userId: session?.user.id,
@@ -85,4 +90,51 @@ export async function uploadScore(input: SailorGameResultInput) {
     }),
   ]);
   revalidatePath("/", "layout");
+  revalidatePath("/Spil/Hajfyldt-Havari/*", "page");
+  console.log("🚀 ~ player:" + player);
+  console.log("🚀 ~ gameSession:" + gameSession);
+  return gameSession;
+}
+
+export async function getGameStats(sessionId: string) {
+  const session = await auth();
+  if (!session?.user?.id) return null;
+
+  const gameSession = await prisma.gameSession.findUnique({
+    where: {
+      id: sessionId,
+      playerId: session.user.id, // Ensure the user can only see their own stats
+    },
+    include: {
+      gameStats: true,
+    },
+  });
+
+  if (!gameSession || !gameSession.gameStats) return null;
+
+  // Check if this was a high score
+  const existingEntry = await prisma.leaderboard.findUnique({
+    where: { gameId_playerId: { gameId: GAME_ID, playerId: session.user.id } },
+  });
+
+  const isHighScore =
+    existingEntry && existingEntry.score === gameSession.gameStats.score;
+
+  // Calculate rewards
+  const coins =
+    Math.floor(gameSession.gameStats.score / 1000) +
+    Math.floor(gameSession.gameStats.obstaclesAvoided / 10);
+  const xp =
+    Math.floor(gameSession.gameStats.score / 100) +
+    Math.floor(gameSession.gameStats.obstaclesAvoided / 10);
+
+  return {
+    score: gameSession.gameStats.score,
+    distance: gameSession.gameStats.distanceTravelled,
+    obstaclesAvoided: gameSession.gameStats.obstaclesAvoided,
+    timeSurvived: gameSession.gameStats.timeSurvived,
+    coins,
+    xp,
+    isHighScore,
+  };
 }
