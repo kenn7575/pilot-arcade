@@ -220,7 +220,6 @@ export default function Game() {
             time: (new Date().getTime() - startedAt.getTime()) / 1000, // convert to seconds
             obsticlesAvoided: obstacledAvoided,
             startedPlayingAt: startedAt,
-            gameId: "1",
           };
 
           uploadScore(sailorGameResultInput).then((result) => {
