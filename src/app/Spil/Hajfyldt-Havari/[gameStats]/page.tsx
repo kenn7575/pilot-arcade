@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ribeye } from "@/lib/fonts";
-import { Anchor, Clock, Trophy, XCircle } from "lucide-react";
+import { Activity, Anchor, Clock, Trophy, XCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RewardCounter } from "./components/RewardCounter";
@@ -10,13 +10,11 @@ import { HighScoreEffect } from "./components/HighScoreEffect";
 
 const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
 
-interface GameResultsPageProps {
-  searchParams: { sessionId?: string };
-}
-
 export default async function GameResultsPage({
   searchParams,
-}: GameResultsPageProps) {
+}: {
+  searchParams: Promise<{ sessionId?: string }>;
+}) {
   const { sessionId } = await searchParams;
   const session = await auth();
 
@@ -73,6 +71,7 @@ export default async function GameResultsPage({
     xp,
     isHighScore,
   };
+  console.log("🚀 ~ results:", results);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-700 flex items-center justify-center p-4">
@@ -104,7 +103,7 @@ export default async function GameResultsPage({
                 <span className="font-semibold">Sømil</span>
               </div>
               <span className="text-2xl font-bold text-blue-900">
-                {(results.distance / 1609.34).toFixed(2)}
+                {results.distance}
               </span>
             </div>
 
@@ -120,8 +119,8 @@ export default async function GameResultsPage({
 
             <div className="bg-blue-50 p-3 rounded-lg">
               <div className="flex items-center gap-2 text-blue-700 justify-center">
-                <XCircle size={18} />
-                <span className="font-semibold">Undviget</span>
+                <Activity size={18} />
+                <span className="font-semibold">Antal hajer undgået</span>
               </div>
               <span className="text-2xl font-bold text-blue-900">
                 {results.obstaclesAvoided}

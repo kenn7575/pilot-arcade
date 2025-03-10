@@ -21,6 +21,9 @@ import { CalendarIcon, Coins, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export function NavigationMenuInventory({ player }: { player: Player | null }) {
+  const compactFormatter = Intl.NumberFormat("DA-dk", { notation: "compact" });
+  const numberFormatter = Intl.NumberFormat("DA-dk", { style: "decimal" });
+
   if (!player)
     return (
       <div>
@@ -36,7 +39,10 @@ export function NavigationMenuInventory({ player }: { player: Player | null }) {
           <Button variant="ghost" size="lg">
             <div className="flex items-center gap-2 ">
               <Sparkles className="text-[#8800f8]  fill-[#8800f8] scale-150" />
-              <span className="font-bold">{player.xp}</span>
+
+              <span className="font-bold">
+                {compactFormatter.format(player.xp)}
+              </span>
             </div>
           </Button>
         </HoverCardTrigger>
@@ -48,7 +54,7 @@ export function NavigationMenuInventory({ player }: { player: Player | null }) {
               <p className="text-sm">
                 Du har i alt opnået{" "}
                 <span className="font-bold text-base">
-                  {player.xp} XP Point.{" "}
+                  {numberFormatter.format(player.xp)} XP Point.{" "}
                 </span>
                 Fortsæt med at spille for at optjene flere point.
               </p>

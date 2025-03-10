@@ -4,9 +4,8 @@ export interface SailorGameResultInput {
   time: number;
   obsticlesAvoided: number;
   startedPlayingAt: Date;
-  gameId: string;
 }
-export interface Player{
+export interface Player {
   userId: string;
   coins: number;
   xp: number;

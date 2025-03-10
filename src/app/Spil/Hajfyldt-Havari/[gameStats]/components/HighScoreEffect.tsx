@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import confetti from "canvas-confetti";
+import { toast } from "sonner";
+import { set } from "zod";
 
 export function HighScoreEffect() {
   useEffect(() => {
@@ -11,8 +13,20 @@ export function HighScoreEffect() {
       confetti({
         particleCount: 100,
         spread: 70,
-        origin: { y: 0.6 },
+        origin: { y: 1, x: 0.8 },
         colors: ["#FFD700", "#4169E1", "#FF6347"],
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#FFD700", "#4169E1", "#FF6347"],
+        });
+      }, 500);
+      toast("Tillykke! Du har slået din rekord", {
+        duration: 5000,
+        dismissible: true,
       });
     }, 500);
   }, []);

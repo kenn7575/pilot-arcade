@@ -496,7 +496,7 @@ export default function Game() {
                 </Button>
               </div>
             )}
-            {gameOver && (
+            {/* {gameOver && (
               <div className="mt-6 text-center bg-red-50 p-4 rounded-lg">
                 <h2 className="text-2xl font-bold text-red-600">Game Over!</h2>
                 <p className="text-gray-700 mt-2">Final Score: {score}</p>
@@ -507,7 +507,7 @@ export default function Game() {
                   Obstacles Avoided: {obstacledAvoided}
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

@@ -20,6 +20,7 @@ import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
 import { NavigationMenuInventory } from "@/components/Invintory";
 import { prisma } from "@/lib/prisma";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -64,6 +65,7 @@ export default async function RootLayout({
             </SidebarInset>
           </SidebarProvider>
           <Analytics />
+          <Toaster />
         </body>
       </SessionProvider>
     </html>

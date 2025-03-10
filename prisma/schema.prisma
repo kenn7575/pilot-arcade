@@ -161,7 +161,7 @@ model GameStats {
   id               String  @id @default(uuid())
   sessionId        String  @unique
   score            Int     @default(0)
-  distanceTravelled Int     @default(0)
+  distanceTravelled Float     @default(0.0)
   obstaclesAvoided Int     @default(0)
   timeSurvived     Int     @default(0) // Time in seconds
   createdAt        DateTime @default(now())
