@@ -23,9 +23,9 @@ export function DisplayNewAchievements({
 
       <h2 className="text-xl font-bold text-blue-900 mb-4">Nye Præstationer</h2>
 
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto justify-between">
         {achievements.map((achievement) => (
-          <Card key={achievement.id} className="w-72 pb-0">
+          <Card key={achievement.id} className="w-72 min-w-60 pb-0">
             <CardHeader>
               <CardTitle>{achievement.achievement.name}</CardTitle>
               <CardDescription>

@@ -181,6 +181,7 @@ async function main() {
   for (const achievement of achievements) {
     await prisma.achievement.create({
       data: {
+        id: achievement.id,
         name: achievement.name,
         description: achievement.description,
         imageUrl: achievement.imageUrl,

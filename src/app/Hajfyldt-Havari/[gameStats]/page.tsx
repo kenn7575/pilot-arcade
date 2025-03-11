@@ -21,7 +21,7 @@ export default async function GameResultsPage({
   const session = await auth();
 
   if (!session?.user?.id || !sessionId) {
-    redirect("/Spil/Hajfyldt-Havari");
+    redirect("/Hajfyldt-Havari");
   }
 
   // Fetch game session data
@@ -49,7 +49,7 @@ export default async function GameResultsPage({
     });
 
   if (!gameSession || !gameSession.gameStats) {
-    redirect("/Spil/Hajfyldt-Havari");
+    redirect("/Hajfyldt-Havari");
   }
 
   // Check if this was a high score
@@ -151,13 +151,13 @@ export default async function GameResultsPage({
           <RewardCounter coins={results.coins} xp={results.xp} />
           <DisplayNewAchievements achievements={newAchievements} />
           <div className="flex gap-3 justify-center mt-8">
-            <Link href="/Spil/Hajfyldt-Havari">
+            <Link href="/Hajfyldt-Havari">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
                 Spil Igen
               </Button>
             </Link>
 
-            <Link href="/Spil">
+            <Link href="/">
               <Button variant="outline" size="lg">
                 Andre Spil
               </Button>

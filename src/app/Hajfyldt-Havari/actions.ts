@@ -92,7 +92,7 @@ export async function uploadScore(
   await computeAchievements(data, session.user.id);
 
   revalidatePath("/", "layout");
-  revalidatePath("/Spil/Hajfyldt-Havari/*", "page");
+  revalidatePath("/Hajfyldt-Havari/*", "page");
   return gameSession;
 }
 

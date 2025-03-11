@@ -227,7 +227,7 @@ export default function Game() {
 
             if (result?.id) {
               // Navigate to results page with session ID
-              window.location.href = `/Spil/Hajfyldt-Havari/results?sessionId=${result.id}`;
+              window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
             }
           });
           setGameOver(true);
