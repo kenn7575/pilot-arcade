@@ -373,70 +373,79 @@ export default function Game() {
           </div>
 
           <div>
-            <div
-              className="relative bg-[url(/sea.jpg)] bg-cover bg-no-repeat rounded-lg overflow-hidden mx-auto no-select"
-              style={{
-                width: gameWidth,
-                height: gameHeight,
-              }}
-              onTouchStart={(e) => e.preventDefault()}
-            >
-              {/* Water effect */}
-              <div className="absolute inset-0 opacity-30">
-                {Array.from({ length: 10 }).map((_, i) => (
-                  <Waves
-                    key={i}
-                    className="text-blue-50 absolute"
-                    style={{
-                      left: `${80 * i * scaleRatio}px`,
-                      top: `${i * -200 * scaleRatio}px`,
-                      animation: `wave ${20 + (i % 2)}s infinite linear`,
-                      transform: `scale(${scaleRatio})`,
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Boat */}
+            <div className="relative">
+              <Image
+                alt="Spil baggrund"
+                src={"/sea.jpg"}
+                width={600}
+                height={600}
+                className="absolute inset-0 w-full h-full object-cover rounded-lg"
+              />
               <div
-                className="absolute transition-transform duration-50"
+                className="relative rounded-lg overflow-hidden mx-auto no-select"
                 style={{
-                  left: boatPosition - (BOAT_SIZE * scaleRatio) / 2,
-                  bottom: (BOAT_SIZE * scaleRatio) / 2,
-                  width: BOAT_SIZE * scaleRatio,
-                  height: BOAT_SIZE * scaleRatio,
+                  width: gameWidth,
+                  height: gameHeight,
                 }}
+                onTouchStart={(e) => e.preventDefault()}
               >
-                <Image
-                  src="/boat2.png"
-                  width={BOAT_SIZE}
-                  height={BOAT_SIZE}
-                  alt="boat sprite"
-                  className="w-full h-full text-blue-900"
-                />
-              </div>
+                {/* Water effect */}
+                <div className="absolute inset-0 opacity-30">
+                  {Array.from({ length: 10 }).map((_, i) => (
+                    <Waves
+                      key={i}
+                      className="text-blue-50 absolute"
+                      style={{
+                        left: `${80 * i * scaleRatio}px`,
+                        top: `${i * -200 * scaleRatio}px`,
+                        animation: `wave ${20 + (i % 2)}s infinite linear`,
+                        transform: `scale(${scaleRatio})`,
+                      }}
+                    />
+                  ))}
+                </div>
 
-              {/* Obstacles */}
-              {obstacles.map((obstacle, index) => (
+                {/* Boat */}
                 <div
-                  key={index}
-                  className="absolute rounded"
+                  className="absolute transition-transform duration-50"
                   style={{
-                    left: obstacle.x,
-                    top: obstacle.y,
-                    width: obstacle.width,
-                    height: obstacle.height,
+                    left: boatPosition - (BOAT_SIZE * scaleRatio) / 2,
+                    bottom: (BOAT_SIZE * scaleRatio) / 2,
+                    width: BOAT_SIZE * scaleRatio,
+                    height: BOAT_SIZE * scaleRatio,
                   }}
                 >
                   <Image
-                    src="/shark.gif"
-                    alt="Shark"
-                    width={OBSTACLE_WIDTH}
-                    height={OBSTACLE_HEIGHT}
-                    className="w-full h-full text-red-700"
+                    src="/boat2.png"
+                    width={BOAT_SIZE}
+                    height={BOAT_SIZE}
+                    alt="boat sprite"
+                    className="w-full h-full text-blue-900"
                   />
                 </div>
-              ))}
+
+                {/* Obstacles */}
+                {obstacles.map((obstacle, index) => (
+                  <div
+                    key={index}
+                    className="absolute rounded"
+                    style={{
+                      left: obstacle.x,
+                      top: obstacle.y,
+                      width: obstacle.width,
+                      height: obstacle.height,
+                    }}
+                  >
+                    <Image
+                      src="/shark.gif"
+                      alt="Shark"
+                      width={OBSTACLE_WIDTH}
+                      height={OBSTACLE_HEIGHT}
+                      className="w-full h-full text-red-700"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-4 flex justify-center gap-4">

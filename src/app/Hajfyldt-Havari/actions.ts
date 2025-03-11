@@ -157,6 +157,7 @@ async function computeAchievements(
       },
     },
   });
+  console.log("🚀 ~ gameStatsSum:", gameStatsSum);
   const gameCountDeadAtFirstObstacle = await prisma.gameSession.count({
     where: {
       gameStats: {
@@ -166,10 +167,6 @@ async function computeAchievements(
       gameId: GAME_ID,
     },
   });
-  console.log(
-    "🚀 ~ gameCountDeadAtFirstObstacle:",
-    gameCountDeadAtFirstObstacle
-  );
 
   const distanceSum = gameStatsSum._sum?.distanceTravelled || 0;
   if (distanceSum >= 1) {
@@ -205,6 +202,8 @@ async function computeAchievements(
   }
 
   const playerObsticlesAvoidedSum = gameStatsSum._sum?.obstaclesAvoided || 0;
+  console.log("🚀 ~ playerObsticlesAvoidedSum:", playerObsticlesAvoidedSum);
+
   if (playerObsticlesAvoidedSum >= 50) {
     achievementsToGrant.push("c3ab5eaf-7ad4-46f6-9b6b-4f46320ed76b");
   }
@@ -217,7 +216,7 @@ async function computeAchievements(
   if (playerObsticlesAvoidedSum >= 1000) {
     achievementsToGrant.push("08075136-f6ba-4837-842c-037f689b71b8");
   }
-  if (true) {
+  if (playerObsticlesAvoidedSum >= 5000) {
     achievementsToGrant.push("a03f0a86-6fba-4a6e-aed0-909d58f9e2dd");
   }
 
@@ -253,6 +252,29 @@ async function computeAchievements(
     if (new Date().getTime() - playerAchievement.unlockedAt.getTime() < 5000)
       createdAchievements.push(playerAchievement);
   }
-  console.log("🚀 ~ createdAchievements:", createdAchievements);
+
+  // for every achievement, add the reward to the player
+  const xpReward = createdAchievements.reduce(
+    (acc, achievement) => acc + achievement.achievement.xpReward,
+    0
+  );
+  const coinsReward = createdAchievements.reduce(
+    (acc, achievement) => acc + achievement.achievement.coinReward,
+    0
+  );
+
+  await prisma.player.update({
+    where: {
+      userId: playerId,
+    },
+    data: {
+      xp: {
+        increment: xpReward,
+      },
+      coins: {
+        increment: coinsReward,
+      },
+    },
+  });
   return createdAchievements;
 }

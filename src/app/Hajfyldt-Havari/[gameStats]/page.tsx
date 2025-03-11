@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { RewardCounter } from "./components/RewardCounter";
 import { HighScoreEffect } from "./components/HighScoreEffect";
+import { DisplayNewAchievements } from "./components/NewAchievements";
+import { playerAchievementDetails } from "@/lib/types";
 
 const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
 
@@ -32,6 +34,19 @@ export default async function GameResultsPage({
       gameStats: true,
     },
   });
+  // Fetch new achievements since the game started or 15 seconds ago
+  const newAchievements: playerAchievementDetails[] =
+    await prisma.playerAchievement.findMany({
+      where: {
+        playerId: session.user.id,
+        unlockedAt: {
+          gt: gameSession?.startedAt || new Date(Date.now() - 15000),
+        },
+      },
+      include: {
+        achievement: true,
+      },
+    });
 
   if (!gameSession || !gameSession.gameStats) {
     redirect("/Spil/Hajfyldt-Havari");
@@ -43,8 +58,7 @@ export default async function GameResultsPage({
       gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
     },
   });
-  console.log("🚀 ~ existingEntry", existingEntry);
-  console.log("🚀 ~ gameSession", gameSession);
+
   const isHighScore =
     !existingEntry || existingEntry.score === gameSession.gameStats.score;
 
@@ -71,7 +85,6 @@ export default async function GameResultsPage({
     xp,
     isHighScore,
   };
-  console.log("🚀 ~ results:", results);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-700 flex items-center justify-center p-4">
@@ -136,7 +149,7 @@ export default async function GameResultsPage({
 
           {/* Client side reward counters */}
           <RewardCounter coins={results.coins} xp={results.xp} />
-
+          <DisplayNewAchievements achievements={newAchievements} />
           <div className="flex gap-3 justify-center mt-8">
             <Link href="/Spil/Hajfyldt-Havari">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700">

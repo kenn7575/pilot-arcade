@@ -127,6 +127,8 @@ model Achievement {
   description String?
   imageUrl       String?
   createdAt   DateTime @default(now())
+  xpReward    Int
+  coinReward Int
 
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
 

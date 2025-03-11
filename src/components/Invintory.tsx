@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, compactFormatter, numberFormatter } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -21,9 +21,6 @@ import { CalendarIcon, Coins, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export function NavigationMenuInventory({ player }: { player: Player | null }) {
-  const compactFormatter = Intl.NumberFormat("DA-dk", { notation: "compact" });
-  const numberFormatter = Intl.NumberFormat("DA-dk", { style: "decimal" });
-
   if (!player)
     return (
       <div>

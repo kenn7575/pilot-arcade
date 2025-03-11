@@ -1,61 +1,87 @@
 import { Button } from "@/components/ui/button";
-import { ribeye } from "@/lib/fonts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Page() {
+  let games = await prisma.game.findMany({
+    include: {
+      Leaderboard: true,
+    },
+  });
+  console.log("🚀 ~ Page ~ games:", games);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Button>Press me</Button>
-        <h1 className={`${ribeye.className} text-6xl`}>Hello world</h1>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+    <div className="flex flex-wrap gap-4 m-4 justify-center xl:justify-start">
+      {games.map((game) => (
+        <Card className="w-[350px]" key={game.id}>
+          <CardHeader>
+            <CardTitle>{game.title}</CardTitle>
+            <CardDescription>{game.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Image
+              width={600}
+              height={600}
+              src={`/${game.imageUrl}` || "/game.png"}
+              alt="Game image"
+            />
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <span>
+              {
+                game?.Leaderboard?.filter((l) => {
+                  return (
+                    l.updatedAt >
+                    new Date(new Date().setDate(new Date().getDate() - 30))
+                  ); // last 7 days
+                }).length
+              }{" "}
+              aktive spillere
+            </span>
+            <Link href={`/${game.title.replaceAll(" ", "-")}`}>
+              <Button className="btn">Play</Button>
+            </Link>
+          </CardFooter>
+        </Card>
+      ))}
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Flere spil</CardTitle>
+          <CardDescription>Kommer snart!</CardDescription>
+        </CardHeader>
+        <CardContent>
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            width={600}
+            height={600}
+            src={`/soon.png`}
+            alt="Kommer snart"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          {/* <span>
+            {
+              game?.Leaderboard?.filter((l) => {
+                return (
+                  l.updatedAt >
+                  new Date(new Date().setDate(new Date().getDate() - 30))
+                ); // last 7 days
+              }).length
+            }{" "}
+            aktive spillere
+          </span>
+          <Link href={`/Spil/${game.title.replaceAll(" ", "-")}`}>
+            <Button className="btn">Play</Button>
+          </Link> */}
+        </CardFooter>
+      </Card>
     </div>
   );
 }

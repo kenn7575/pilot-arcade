@@ -25,7 +25,7 @@ import Link from "next/link";
 const links = [
   {
     title: "Spil",
-    url: "Spil",
+    url: "",
     icon: Gamepad2,
     isActive: true,
   },
