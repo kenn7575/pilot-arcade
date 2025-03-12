@@ -1,10 +1,10 @@
 "use server";
+export const runtime = "edge";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SailorGameResultInput } from "@/lib/types";
 import { GameSession } from "@prisma/client";
-import { Coins } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
