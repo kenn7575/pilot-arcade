@@ -83,7 +83,6 @@ model Player {
   userId       String   @id
   xp           Int        @default(0)
   coins        Int        @default(0)
-  scores       Score[]
   achievements PlayerAchievement[]
   gameSessions GameSession[]
 
@@ -100,24 +99,10 @@ model Game {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   imageUrl    String?
-  scores      Score[]
   achievements Achievement[]
   gameSessions GameSession[]
 
   Leaderboard Leaderboard[]
-}
-
-model Score {
-  id        String  @id @default(uuid())
-  playerId  String
-  gameId    String
-  points    Int
-  timestamp DateTime @default(now())
-
-  player Player @relation(fields: [playerId], references: [userId], onDelete: Cascade)
-  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
-
-  @@unique([playerId, gameId, timestamp]) // Prevent duplicate scores at the same moment
 }
 
 model Achievement {

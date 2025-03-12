@@ -105,7 +105,7 @@ async function main() {
     {
       id:"c3ab5eaf-7ad4-46f6-9b6b-4f46320ed76b",
       name: "Hajerne Er Sultne",
-      description: "Undgå 50 hajer.",
+      description: "Undgå 50 hajer i alt.",
       gameId: GAME_ID,
       imageUrl: "Hajfyldt-Havari/shark1.png",
       xpReward: 50,
@@ -114,7 +114,7 @@ async function main() {
     {
       id:"e7e9e884-37ca-4eb4-9ef5-a8b0a62aab67",
       name: "Haj Hejjjj!",
-      description: "Undgå 100 hajer.",
+      description: "Undgå 100 hajer i alt.",
       gameId: GAME_ID,
       imageUrl: "Hajfyldt-Havari/shark2.png",
       xpReward: 250,
@@ -123,7 +123,7 @@ async function main() {
     {
       id:"2472658f-48a3-4348-a506-36711971060e",
       name: "Fuld Skipperlicens",
-      description: "Undgå 500 hajer.",
+      description: "Undgå 500 hajer i alt.",
       gameId: GAME_ID,
       imageUrl: "Hajfyldt-Havari/shark3.png",
       xpReward: 500,
@@ -132,7 +132,7 @@ async function main() {
     {
       id:"08075136-f6ba-4837-842c-037f689b71b8",
       name: "Havets Ninja",
-      description: "Undgå 1.000 hajer.",
+      description: "Undgå 1.000 hajer i alt.",
       gameId: GAME_ID,
       imageUrl: "Hajfyldt-Havari/shark4.png",
       xpReward: 1250,
@@ -141,7 +141,7 @@ async function main() {
     {
       id:"a03f0a86-6fba-4a6e-aed0-909d58f9e2dd",
       name: "Neptuns Mareridt",
-      description: "Undgå 5.000 hajer.",
+      description: "Undgå 5.000 hajer i alt.",
       gameId: GAME_ID,
       imageUrl: "Hajfyldt-Havari/shark5.png",
       xpReward: 3000,

@@ -1,5 +1,4 @@
 "use server";
-export const runtime = "edge";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -42,6 +41,7 @@ export async function uploadScore(
     Math.floor(data.score / 10) + Math.floor(data.obsticlesAvoided / 10);
 
   // Remove separate query for existingEntry and include in Promise.all
+  console.time("firstFetch");
   const [
     leaderboardResult,
     gameSession,
@@ -100,24 +100,7 @@ export async function uploadScore(
       },
     }),
   ]);
-
-  // Only update leaderboard if needed
-  if (!leaderboardResult || data.score > leaderboardResult.score) {
-    await prisma.leaderboard.upsert({
-      where: {
-        gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
-      },
-      update: {
-        score: data.score,
-      },
-      create: {
-        gameId: GAME_ID,
-        playerId: session.user.id,
-        score: data.score,
-        rank: 0,
-      },
-    });
-  }
+  console.timeEnd("firstFetch");
 
   const rewardValues = await computeAchievements({
     gameResult: input,
@@ -127,23 +110,46 @@ export async function uploadScore(
     existingAchievements,
   });
 
+  console.time("fourthFetch");
   // Update player's coins and xp
-  await prisma.player.update({
-    where: {
-      userId: session.user.id,
-    },
-    data: {
-      coins: {
-        increment: coins + rewardValues.coins,
+  await Promise.all([
+    prisma.player.update({
+      where: {
+        userId: session.user.id,
       },
-      xp: {
-        increment: xp + rewardValues.xp,
+      data: {
+        coins: {
+          increment: coins + rewardValues.coins,
+        },
+        xp: {
+          increment: xp + rewardValues.xp,
+        },
       },
-    },
-  });
+    }),
+    // Only update leaderboard if needed
+    !leaderboardResult || data.score > leaderboardResult.score
+      ? prisma.leaderboard.upsert({
+          where: {
+            gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
+          },
+          update: {
+            score: data.score,
+          },
+          create: {
+            gameId: GAME_ID,
+            playerId: session.user.id,
+            score: data.score,
+            rank: 0,
+          },
+        })
+      : Promise.resolve(),
+  ]);
+  console.timeEnd("fourthFetch");
 
+  console.time("revalidateCache");
   revalidatePath("/", "layout");
   revalidatePath("/Hajfyldt-Havari/*", "page");
+  console.timeEnd("revalidateCache");
   return gameSession;
 }
 
@@ -200,7 +206,6 @@ async function computeAchievements(input: {
   // Run initial database queries in parallel
 
   const achievementsToGrant = [];
-
   // ...existing code to determine achievements...
   if (input.totalDistance >= 1) {
     achievementsToGrant.push("6229a0c6-d3c2-46cc-b3fd-34b53adf9e24");
@@ -262,8 +267,6 @@ async function computeAchievements(input: {
     achievementsToGrant.push("4a7fbdf9-dbe2-46c3-86b7-f8fdb2df2525");
   }
 
-  // Get existing player achievements first
-
   // Filter out achievements the player already has
   const newAchievementIds = achievementsToGrant.filter(
     (id) =>
@@ -272,6 +275,7 @@ async function computeAchievements(input: {
       )
   );
 
+  console.time("secondFetch");
   // Create all new achievements in a single transaction
   const playerAchievementUpserts = await prisma.playerAchievement.createMany({
     data: newAchievementIds.map((achievementId) => ({
@@ -281,7 +285,9 @@ async function computeAchievements(input: {
     })),
     skipDuplicates: true,
   });
+  console.timeEnd("secondFetch");
 
+  console.time("thirdFetch");
   // Fetch the complete achievement data for newly created achievements
   const newlyCreatedAchievements =
     newAchievementIds.length > 0
@@ -297,6 +303,7 @@ async function computeAchievements(input: {
           },
         })
       : [];
+  console.timeEnd("thirdFetch");
 
   const coins = newlyCreatedAchievements.reduce(
     (acc, achievement) => acc + achievement.achievement.coinReward,
