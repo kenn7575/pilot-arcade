@@ -44,14 +44,29 @@ export async function uploadScore(
   console.time("firstFetch");
   const [
     leaderboardResult,
-    gameSession,
+    existingAchievements,
     gameStatsSum,
     gameCountDeadAtFirstObstacle,
-    existingAchievements,
+    gameSession, // Move write operation last
   ] = await Promise.all([
     prisma.leaderboard.findUnique({
       where: {
         gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
+      },
+    }),
+    prisma.playerAchievement.findMany({
+      where: { playerId: session.user.id },
+      select: { achievementId: true },
+    }),
+    prisma.gameStats.aggregate({
+      _sum: { distanceTravelled: true, obstaclesAvoided: true },
+      where: { gameSession: { playerId: session?.user.id, gameId: GAME_ID } },
+    }),
+    prisma.gameSession.count({
+      where: {
+        gameStats: { obstaclesAvoided: 0 },
+        playerId: session?.user.id,
+        gameId: GAME_ID,
       },
     }),
     prisma.gameSession.create({
@@ -68,35 +83,6 @@ export async function uploadScore(
             obstaclesAvoided: data.obsticlesAvoided,
           },
         },
-      },
-    }),
-    prisma.gameStats.aggregate({
-      _sum: {
-        distanceTravelled: true,
-        obstaclesAvoided: true,
-      },
-      where: {
-        gameSession: {
-          playerId: session?.user.id,
-          gameId: GAME_ID,
-        },
-      },
-    }),
-    prisma.gameSession.count({
-      where: {
-        gameStats: {
-          obstaclesAvoided: 0,
-        },
-        playerId: session?.user.id,
-        gameId: GAME_ID,
-      },
-    }),
-    await prisma.playerAchievement.findMany({
-      where: {
-        playerId: session.user.id,
-      },
-      select: {
-        achievementId: true,
       },
     }),
   ]);
