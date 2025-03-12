@@ -54,7 +54,7 @@ export default async function RootLayout({
           >
             <AppSidebar />
             <SidebarInset>
-              <header className="sticky h-14 top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4">
+              <header className="sticky h-14 top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4 z-50">
                 <SidebarTrigger className="-ml-1" />
                 <Separator className="mr-2 h-4" />
                 {/* if player is logged in show Inventory, else sugguest login */}
