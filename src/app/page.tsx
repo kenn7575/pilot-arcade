@@ -14,10 +14,12 @@ import Link from "next/link";
 export default async function Page() {
   let games = await prisma.game.findMany({
     include: {
-      Leaderboard: true,
+      gameSessions: {
+        distinct: ["playerId"],
+      },
     },
   });
-  console.log("🚀 ~ Page ~ games:", games);
+  console.log("🚀 ~ Page ~ games:", `/games/${games[0].imageUrl}`);
   return (
     <div className="flex flex-wrap gap-4 m-4 justify-center xl:justify-start">
       {games.map((game) => (
@@ -30,16 +32,16 @@ export default async function Page() {
             <Image
               width={600}
               height={600}
-              src={`/${game.imageUrl}` || "/game.png"}
+              src={`/${game.imageUrl}` || "/soon.png"}
               alt="Game image"
             />
           </CardContent>
           <CardFooter className="flex justify-between">
             <span>
               {
-                game?.Leaderboard?.filter((l) => {
+                game?.gameSessions?.filter((l) => {
                   return (
-                    l.updatedAt >
+                    l.startedAt >
                     new Date(new Date().setDate(new Date().getDate() - 30))
                   ); // last 7 days
                 }).length
