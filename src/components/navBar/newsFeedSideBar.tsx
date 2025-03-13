@@ -13,9 +13,9 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import { GetNewsFeed, newsFeedItem } from "./actions/GetNewsFeed";
+import { GetNewsFeed, newsFeedItem } from "../actions/GetNewsFeed";
 import { useEffect, useState } from "react";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 export function GetGameStats() {
   const [newsFeedItems, setNewsFeedItems] = useState<newsFeedItem[]>([]);

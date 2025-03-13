@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Command, Crown, Gamepad2, Medal, Settings } from "lucide-react";
 
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/navBar/sideBarUserMenu";
 import { Label } from "@/components/ui/label";
 import {
   Sidebar,
@@ -21,7 +21,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import Link from "next/link";
-import { GetGameStats } from "./newsFeed";
+import { GetGameStats } from "./newsFeedSideBar";
 
 const links = [
   {
@@ -54,7 +54,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem, setActiveItem] = React.useState(links[0]);
-  const { setOpen } = useSidebar();
+  const { setOpenMobile } = useSidebar();
+
+  // Function to handle link clicks - will close the sidebar
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
 
   return (
     <Sidebar
@@ -73,7 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-                <a href="/">
+                <a href="/" onClick={handleLinkClick}>
                   <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
                     <Image
                       src="/logo.png"
@@ -102,7 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {links.map((link) => (
                   <SidebarMenuItem key={link.title}>
-                    <Link href={`/${link.url}`}>
+                    <Link href={`/${link.url}`} onClick={handleLinkClick}>
                       <SidebarMenuButton
                         tooltip={{
                           children: link.title,
@@ -124,9 +129,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <NavUser />
         </SidebarFooter>
       </Sidebar>
-
-      {/* This is the second sidebar */}
-      {/* We disable collapsible and let it fill remaining space */}
       <GetGameStats />
     </Sidebar>
   );

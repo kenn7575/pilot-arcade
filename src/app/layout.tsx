@@ -6,7 +6,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebat";
+import { AppSidebar } from "@/components/navBar/mainSideBar";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import {
   Breadcrumb,
@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
-import { NavigationMenuInventory } from "@/components/Invintory";
+import { NavigationMenuInventory } from "@/components/navBar/PlayerStatsDefault";
 import { prisma } from "@/lib/prisma";
 import { Toaster } from "sonner";
+import { PlayerStatsPicker } from "@/components/navBar/PlayerStatsPicker";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -59,7 +60,7 @@ export default async function RootLayout({
                 <Separator className="mr-2 h-4" />
                 {/* if player is logged in show Inventory, else sugguest login */}
 
-                <NavigationMenuInventory player={playerInfo} />
+                <PlayerStatsPicker player={playerInfo} />
               </header>
               <div className="flex flex-1 flex-col gap-4 ">{children}</div>
             </SidebarInset>
