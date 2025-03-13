@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
-import { NavigationMenuInventory } from "@/components/navBar/PlayerStatsDefault";
 import { prisma } from "@/lib/prisma";
 import { Toaster } from "sonner";
 import { PlayerStatsPicker } from "@/components/navBar/PlayerStatsPicker";
