@@ -53,7 +53,7 @@ export default async function Page() {
             </CardHeader>
             <CardContent>
               <Image
-                src={`/games/${achievement.imageUrl ?? "/placeholder.png"}`}
+                src={`/games/${achievement.imageUrl ?? "/missing.jpg"}`}
                 alt={achievement.name}
                 width={400}
                 height={300}

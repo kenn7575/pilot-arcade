@@ -376,7 +376,7 @@ export default function Game() {
             <div className="relative">
               <Image
                 alt="Spil baggrund"
-                src={"/sea.jpg"}
+                src={"/games/Hajfyldt-Havari/sprites/sea.jpg"}
                 width={600}
                 height={600}
                 className="absolute inset-0 w-full h-full object-cover rounded-lg"
@@ -416,7 +416,7 @@ export default function Game() {
                   }}
                 >
                   <Image
-                    src="/boat2.png"
+                    src="/games/Hajfyldt-Havari/sprites/boat2.png"
                     width={BOAT_SIZE}
                     height={BOAT_SIZE}
                     alt="boat sprite"
@@ -437,7 +437,7 @@ export default function Game() {
                     }}
                   >
                     <Image
-                      src="/shark.gif"
+                      src="/games/Hajfyldt-Havari/sprites/shark.gif"
                       alt="Shark"
                       width={OBSTACLE_WIDTH}
                       height={OBSTACLE_HEIGHT}

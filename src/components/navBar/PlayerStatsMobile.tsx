@@ -44,12 +44,17 @@ export function PlayerStatsMobile({ player }: { player: Player }) {
           </div>
         </PopoverContent>
       </Popover>
-      m
+
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="ghost" size="lg">
             <div className="flex items-center gap-2 ">
-              <Image src="/coin.png" alt="Player xp" width={24} height={24} />
+              <Image
+                src="/sprites/coin.png"
+                alt="Player xp"
+                width={24}
+                height={24}
+              />
               <span className="font-bold">{player.coins}</span>
             </div>
           </Button>

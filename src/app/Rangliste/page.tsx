@@ -1,12 +1,48 @@
-export default function Page() {
-  return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <h1 className="text-3xl font-bold">Rangliste</h1>
-      <p className="mt-2 mb-6">
-        Her kan du se en oversigt over de bedste spillere i de forskellige spil.
-      </p>
+import { prisma } from "@/lib/prisma";
+import { Game, Player, User, Leaderboard } from "@prisma/client";
+import { Podium } from "./Podium";
+import { ribeye, ribeyeMarrow } from "@/lib/fonts";
 
-      <h2 className="text-xl font-bold">Kommer snart!</h2>
-    </div>
+export interface GameWithLeaderBoard extends Game {
+  Leaderboard: LeaderboardWithPlayer[];
+}
+export interface PlayerWithUser extends Player {
+  user: User;
+}
+export interface LeaderboardWithPlayer extends Leaderboard {
+  player: PlayerWithUser;
+}
+
+export default async function Page() {
+  const games = await prisma.game.findMany({
+    include: {
+      Leaderboard: {
+        include: {
+          player: {
+            include: {
+              user: true,
+            },
+          },
+        },
+        orderBy: {
+          score: "desc",
+        },
+      },
+    },
+  });
+
+  return (
+    <main className="sm:p-4">
+      <section>
+        <h1
+          className={`${ribeyeMarrow.className} text-4xl font-bold text-blue-900 mb-2`}
+        >
+          Rangliste
+        </h1>
+
+        <p>Se hvor du ligger i forhold til dine venner og andre spillere.</p>
+        <Podium games={games} />
+      </section>
+    </main>
   );
 }

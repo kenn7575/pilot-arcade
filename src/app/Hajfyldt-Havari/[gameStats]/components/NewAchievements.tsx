@@ -35,7 +35,7 @@ export function DisplayNewAchievements({
             <CardContent>
               <Image
                 src={`/games/${
-                  achievement.achievement.imageUrl ?? "/placeholder.png"
+                  achievement.achievement.imageUrl ?? "/missing.jpg"
                 }`}
                 alt={achievement.achievement.name}
                 width={400}

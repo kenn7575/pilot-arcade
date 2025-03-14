@@ -21,11 +21,11 @@ export const authOptions: NextAuthConfig = {
       clientId: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     }),
-    MicrosoftEntraID({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-      issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
-    }),
+    // MicrosoftEntraID({
+    //   clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+    //   clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+    //   issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
+    // }),
   ],
   session: {
     strategy: "jwt",

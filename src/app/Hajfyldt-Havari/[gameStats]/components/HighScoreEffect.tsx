@@ -34,7 +34,7 @@ export function HighScoreEffect() {
   return (
     <div className="relative w-20 h-20 mx-auto mb-4">
       <Image
-        src="/trophy.png"
+        src="/sprites/trophy.png"
         alt="Trophy"
         width={200}
         height={200}

@@ -22,7 +22,7 @@ export function PlayerStatsPicker({ player }: { player: Player | null }) {
         <PlayerStatsMobile player={player} />
       </div>
       <div className="hidden sm:flex">
-        <PlayerStatsDefault player={player} />;
+        <PlayerStatsDefault player={player} />
       </div>
     </>
   );

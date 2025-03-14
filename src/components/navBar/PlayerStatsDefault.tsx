@@ -45,12 +45,17 @@ export function PlayerStatsDefault({ player }: { player: Player }) {
           </div>
         </HoverCardContent>
       </HoverCard>
-      d
+
       <HoverCard openDelay={0} closeDelay={0}>
         <HoverCardTrigger asChild>
           <Button variant="ghost" size="lg">
             <div className="flex items-center gap-2 ">
-              <Image src="/coin.png" alt="Player xp" width={24} height={24} />
+              <Image
+                src="/sprites/coin.png"
+                alt="Player xp"
+                width={24}
+                height={24}
+              />
               <span className="font-bold">{player.coins}</span>
             </div>
           </Button>
