@@ -21,6 +21,7 @@ import { SessionProvider } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
 import { Toaster } from "sonner";
 import { PlayerStatsPicker } from "@/components/navBar/PlayerStatsPicker";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -42,32 +43,39 @@ export default async function RootLayout({
     });
   } else playerInfo = null;
   return (
-    <html lang="en">
-      <SessionProvider session={session}>
-        <body className={`antialiased`}>
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "350px",
-              } as React.CSSProperties
-            }
-          >
-            <AppSidebar />
-            <SidebarInset>
-              <header className="sticky h-14 top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4 z-50">
-                <SidebarTrigger className="-ml-1" />
-                <Separator className="mr-2 h-4" />
-                {/* if player is logged in show Inventory, else sugguest login */}
+    <html lang="en" suppressHydrationWarning>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SessionProvider session={session}>
+          <body className={`antialiased`}>
+            <SidebarProvider
+              style={
+                {
+                  "--sidebar-width": "350px",
+                } as React.CSSProperties
+              }
+            >
+              <AppSidebar />
+              <SidebarInset>
+                <header className="sticky h-14 top-0 flex justify-between shrink-0 items-center gap-2 border-b bg-background p-4 z-50">
+                  <SidebarTrigger className="-ml-1" />
+                  <Separator className="mr-2 h-4" />
+                  {/* if player is logged in show Inventory, else sugguest login */}
 
-                <PlayerStatsPicker player={playerInfo} />
-              </header>
-              <div className="flex flex-1 flex-col gap-4 ">{children}</div>
-            </SidebarInset>
-          </SidebarProvider>
-          <Analytics />
-          <Toaster />
-        </body>
-      </SessionProvider>
+                  <PlayerStatsPicker player={playerInfo} />
+                </header>
+                <div className="flex flex-1 flex-col gap-4 ">{children}</div>
+              </SidebarInset>
+            </SidebarProvider>
+            <Analytics />
+            <Toaster />
+          </body>
+        </SessionProvider>
+      </ThemeProvider>
     </html>
   );
 }

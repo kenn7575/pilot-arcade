@@ -9,61 +9,107 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { use, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-export function Podium({ games }: { games: GameWithLeaderBoard[] }) {
-  if (!games.length) return <div>No games</div>;
-  const [selectedGame, setSelectedGame] = useState<string>(games[0]?.id);
+import { formatInitials } from "@/lib/formatInitials";
+import { formatTimeAgo } from "@/lib/dateFormatter";
+import Image from "next/image";
 
-  useEffect(() => {
-    console.log("dd");
-  }, [games]);
+export function Podium({ game }: { game: GameWithLeaderBoard }) {
+  const topPlayers = game.Leaderboard.slice(0, 3);
+
   return (
-    <div>
-      {/* select a game  */}
-      <ToggleGroup
-        className="mt-6"
-        type="single"
-        value={selectedGame}
-        onValueChange={(value) => value && setSelectedGame(value)}
-      >
-        {games.map((game) => (
-          //   <ToggleGroupItem >
-          //     {game.title}
-          //   </ToggleGroupItem>
-          <Button asChild onClick={() => setSelectedGame(game.id)}>
-            <Badge
-              key={game.id}
-              variant="outline"
-              className={
-                selectedGame === game.id
-                  ? ""
-                  : "bg-background text-foreground hover:text-primary-foreground duration-200 transition-colors"
-              }
-            >
-              {game.title}
+    <div className="relative flex items-baseline justify-between gap-4  mb-8">
+      {/* Second Place */}
+      {topPlayers.length > 1 && (
+        <Card className="w-56 mt-auto h-80 silver text-slate-900">
+          <CardHeader className="text-center p-4 items-center">
+            <Avatar className="sm:h-12 sm:w-12 ">
+              <AvatarFallback>
+                {formatInitials(topPlayers[1].player.user.name || "^_^")}
+              </AvatarFallback>
+              <AvatarImage src={topPlayers[1].player.user.image || ""} />
+            </Avatar>
+            <CardTitle className="text-sm text-pretty ">
+              {topPlayers[1].player.user.name}
+            </CardTitle>
+            <CardDescription className="text-slate-900">
+              Score: {topPlayers[1].score.toLocaleString()}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="p-4 pt-0">
+            <Badge variant="secondary" className="w-full justify-center">
+              2nd Place
             </Badge>
-          </Button>
-        ))}
-      </ToggleGroup>
-      <Separator className="my-4" color="foreground" orientation="horizontal" />
-      {games
-        .filter((game) => game.id === selectedGame)
-        .map((game) => (
-          <Card key={game.id}>
-            <CardHeader>
-              <CardTitle>{game.title}</CardTitle>
-            </CardHeader>
-            {/* <CardContent>
-            <CardDescription>{game.player.user.name}</CardDescription>
-          </CardContent>
-          <CardFooter>
-            <CardDescription>{game.score}</CardDescription>
-          </CardFooter> */}
-          </Card>
-        ))}
+          </CardFooter>
+        </Card>
+      )}
+
+      {/* First Place */}
+      {topPlayers.length > 0 && (
+        <Card className="w-56 h-96 gold text-amber-950">
+          <CardHeader className="text-center p-4 items-center">
+            <Avatar className="sm:h-12 sm:w-12 ">
+              <AvatarFallback>
+                {formatInitials(topPlayers[0].player.user.name || "^_^")}
+              </AvatarFallback>
+              <AvatarImage src={topPlayers[0].player.user.image || ""} />
+            </Avatar>
+            <CardTitle className="text-pretty">
+              {topPlayers[0].player.user.name}
+            </CardTitle>
+            <CardDescription className="text-amber-950">
+              Score: {topPlayers[0].score.toLocaleString()}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="p-4 pt-0 flex-col gap-8">
+            <Badge
+              variant="secondary"
+              className="w-full justify-center bg-yellow-100  border-yellow-900 text-yellow-900"
+            >
+              1st Place
+            </Badge>
+            <Image
+              src="/sprites/trophy.png"
+              alt="Trophy"
+              width={100}
+              height={100}
+              className="animate-pulse"
+            />
+          </CardFooter>
+        </Card>
+      )}
+
+      {/* Third Place */}
+      {topPlayers.length > 2 && (
+        <Card className="w-56 mt-auto h-72  bronze text-orange-950">
+          <CardHeader className="text-center p-4 items-center">
+            <Avatar className="sm:h-12 sm:w-12 ">
+              <AvatarFallback>
+                {formatInitials(topPlayers[2].player.user.name || "^_^")}
+              </AvatarFallback>
+              <AvatarImage src={topPlayers[2].player.user.image || ""} />
+            </Avatar>
+            <CardTitle className="text-sm text-pretty">
+              {topPlayers[2].player.user.name}
+            </CardTitle>
+            <CardDescription className="text-orange-950">
+              Score: {topPlayers[2].score.toLocaleString()}
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="p-4 pt-0">
+            <Badge
+              variant="secondary"
+              className="w-full justify-center bg-orange-950 text-orange-100"
+            >
+              3rd Place
+            </Badge>
+          </CardFooter>
+        </Card>
+      )}
     </div>
   );
 }

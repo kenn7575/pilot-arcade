@@ -32,7 +32,7 @@ export default async function Page() {
             <Image
               width={600}
               height={600}
-              src={`/${game.imageUrl}` || "/soon.png"}
+              src={`/games/${game.imageUrl}` || "/soon.png"}
               alt="Game image"
             />
           </CardContent>

@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Game, Player, User, Leaderboard } from "@prisma/client";
 import { Podium } from "./Podium";
 import { ribeye, ribeyeMarrow } from "@/lib/fonts";
+import { RankTable } from "./tableList";
+import { GamePicker } from "./GamePicker";
 
 export interface GameWithLeaderBoard extends Game {
   Leaderboard: LeaderboardWithPlayer[];
@@ -33,16 +35,16 @@ export default async function Page() {
 
   return (
     <main className="sm:p-4">
-      <section>
+      <section className="text-center">
         <h1
-          className={`${ribeyeMarrow.className} text-4xl font-bold text-blue-900 mb-2`}
+          className={`${ribeyeMarrow.className} text-5xl font-bold text-primary mb-2`}
         >
           Rangliste
         </h1>
 
         <p>Se hvor du ligger i forhold til dine venner og andre spillere.</p>
-        <Podium games={games} />
       </section>
+      <GamePicker games={games} />
     </main>
   );
 }
