@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { RewardCounter } from "./components/RewardCounter";
 import { HighScoreEffect } from "./components/HighScoreEffect";
 import { DisplayNewAchievements } from "./components/NewAchievements";
-import { playerAchievementDetails } from "@/lib/types";
+import { GameSessionWithStats, playerAchievementDetails } from "@/lib/types";
+import { cookies } from "next/headers";
 
 const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
 
@@ -19,56 +20,80 @@ export default async function GameResultsPage({
 }) {
   const { sessionId } = await searchParams;
   const session = await auth();
-
   if (!session?.user?.id || !sessionId) {
     redirect("/Hajfyldt-Havari");
   }
+  const cookieStore = await cookies();
 
-  // Fetch game session data
-  const gameSession = await prisma.gameSession.findUnique({
-    where: {
-      id: sessionId,
-      playerId: session.user.id, // Ensure the user can only see their own stats
-    },
-    include: {
-      gameStats: true,
-    },
-  });
-  // Fetch new achievements since the game started or 15 seconds ago
-  const newAchievements: playerAchievementDetails[] =
-    await prisma.playerAchievement.findMany({
-      where: {
-        playerId: session.user.id,
-        unlockedAt: {
-          gt: gameSession?.startedAt || new Date(Date.now() - 15000),
+  interface GameResult {
+    gameSession: GameSessionWithStats;
+    achievements: playerAchievementDetails[];
+    isHighScore: boolean;
+  }
+
+  const cachedData = JSON.parse(cookieStore.get(sessionId)!.value) as
+    | GameResult
+    | undefined;
+
+  let fetchedData: GameResult | undefined;
+
+  if (!cachedData) {
+    const gameSession: GameSessionWithStats | null =
+      await prisma.gameSession.findUnique({
+        where: {
+          id: sessionId,
+          playerId: session.user.id, // Ensure the user can only see their own stats
         },
-      },
-      include: {
-        achievement: true,
+        include: {
+          gameStats: true,
+        },
+      });
+    // Fetch new achievements since the game started or 15 seconds ago
+    const newAchievements: playerAchievementDetails[] =
+      await prisma.playerAchievement.findMany({
+        where: {
+          playerId: session.user.id,
+          unlockedAt: {
+            gt: gameSession?.startedAt || new Date(Date.now() - 15000),
+          },
+        },
+        include: {
+          achievement: true,
+        },
+      });
+    // Check if this was a high score
+    const existingEntry = await prisma.leaderboard.findUnique({
+      where: {
+        gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
       },
     });
 
-  if (!gameSession || !gameSession.gameStats) {
+    if (!gameSession || !gameSession.gameStats) {
+      redirect("/Hajfyldt-Havari");
+    }
+
+    const isHighScore =
+      !existingEntry || existingEntry.score === gameSession.gameStats.score;
+
+    fetchedData = {
+      gameSession: gameSession,
+      achievements: newAchievements,
+      isHighScore,
+    };
+  }
+
+  const data = cachedData || fetchedData;
+  if (!data) {
     redirect("/Hajfyldt-Havari");
   }
 
-  // Check if this was a high score
-  const existingEntry = await prisma.leaderboard.findUnique({
-    where: {
-      gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
-    },
-  });
-
-  const isHighScore =
-    !existingEntry || existingEntry.score === gameSession.gameStats.score;
-
   // Calculate rewards
   const coins =
-    Math.floor(gameSession.gameStats.score / 1000) +
-    Math.floor(gameSession.gameStats.obstaclesAvoided / 10);
+    Math.floor((data.gameSession.gameStats?.score ?? 0) / 1000) +
+    Math.floor(data.gameSession.gameStats?.obstaclesAvoided ?? 0 / 10);
   const xp =
-    Math.floor(gameSession.gameStats.score / 100) +
-    Math.floor(gameSession.gameStats.obstaclesAvoided / 10);
+    Math.floor((data.gameSession.gameStats?.score ?? 0) / 100) +
+    Math.floor(data.gameSession.gameStats?.obstaclesAvoided ?? 0 / 10);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -77,23 +102,23 @@ export default async function GameResultsPage({
   };
 
   const results = {
-    score: gameSession.gameStats.score,
-    distance: gameSession.gameStats.distanceTravelled,
-    obstaclesAvoided: gameSession.gameStats.obstaclesAvoided,
-    timeSurvived: gameSession.gameStats.timeSurvived,
+    score: data.gameSession.gameStats?.score,
+    distance: data.gameSession.gameStats?.distanceTravelled,
+    obstaclesAvoided: data.gameSession.gameStats?.obstaclesAvoided,
+    timeSurvived: data.gameSession.gameStats?.timeSurvived,
     coins,
     xp,
-    isHighScore,
+    isHighScore: data.isHighScore,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-700 flex items-center justify-center p-4">
+    <main className="min-h-view bg-gradient-to-b from-muted flex justify-center sm:p-4">
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-lg">
         <div className="text-center">
           <h1
             className={`${ribeye.className} text-3xl font-bold text-blue-900 mb-4`}
           >
-            {results.isHighScore ? "New High Score!" : "Game Over!"}
+            {results.isHighScore ? "Ny personlig rekord!" : "Game Over!"}
           </h1>
 
           {/* Conditional high score effect */}
@@ -126,7 +151,7 @@ export default async function GameResultsPage({
                 <span className="font-semibold">Tid</span>
               </div>
               <span className="text-2xl font-bold text-blue-900">
-                {formatTime(results.timeSurvived)}
+                {formatTime(results.timeSurvived ?? 0)}
               </span>
             </div>
 
@@ -149,7 +174,7 @@ export default async function GameResultsPage({
 
           {/* Client side reward counters */}
           <RewardCounter coins={results.coins} xp={results.xp} />
-          <DisplayNewAchievements achievements={newAchievements} />
+          <DisplayNewAchievements achievements={data.achievements} />
           <div className="flex gap-3 justify-center mt-8">
             <Link href="/Hajfyldt-Havari">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
@@ -157,14 +182,14 @@ export default async function GameResultsPage({
               </Button>
             </Link>
 
-            <Link href="/">
+            <Link href="/Rangliste">
               <Button variant="outline" size="lg">
-                Andre Spil
+                Se rangliste
               </Button>
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

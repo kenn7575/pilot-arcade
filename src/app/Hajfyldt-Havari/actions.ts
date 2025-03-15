@@ -2,10 +2,11 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { SailorGameResultInput } from "@/lib/types";
+import { playerAchievementDetails, SailorGameResultInput } from "@/lib/types";
 import { GameSession } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { cookies } from "next/headers";
 const GAME_ID = "3f4d04da-46df-43d7-bb6c-0b15e943057a";
 
 const schema = z.object({
@@ -25,7 +26,6 @@ export async function uploadScore(
   input: SailorGameResultInput
 ): Promise<GameSession | void> {
   let session = await auth();
-  console.log("🚀 ~ session:", session?.user);
 
   // validate input
   if (!session?.user?.id) return;
@@ -86,11 +86,18 @@ export async function uploadScore(
           },
         },
       },
+      include: {
+        gameStats: true,
+      },
     }),
   ]);
   console.timeEnd("firstFetch");
 
-  const rewardValues = await computeAchievements({
+  const {
+    xp: _xp,
+    coins: _coins,
+    achievements,
+  } = await computeAchievements({
     gameResult: input,
     playerId: session.user.id,
     totalDistance: gameStatsSum._sum.distanceTravelled || 0,
@@ -107,10 +114,10 @@ export async function uploadScore(
       },
       data: {
         coins: {
-          increment: coins + rewardValues.coins,
+          increment: coins + _coins,
         },
         xp: {
-          increment: xp + rewardValues.xp,
+          increment: xp + _xp,
         },
       },
     }),
@@ -135,10 +142,25 @@ export async function uploadScore(
   console.timeEnd("fourthFetch");
 
   console.time("revalidateCache");
+
   revalidatePath("/", "layout");
   revalidatePath("/Hajfyldt-Havari/*", "page");
   console.timeEnd("revalidateCache");
   console.timeEnd("totalFetch");
+
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: gameSession.id,
+    value: JSON.stringify({
+      gameSession: gameSession,
+      achievements: achievements,
+      isHighScore: !leaderboardResult || data.score > leaderboardResult.score,
+    }),
+    expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+    httpOnly: true,
+    sameSite: "strict",
+  });
+
   return gameSession;
 }
 
@@ -191,7 +213,11 @@ async function computeAchievements(input: {
   totalDistance: number;
   gameCountDeadAtFirstObstacle: number;
   existingAchievements: { achievementId: string }[];
-}): Promise<{ xp: number; coins: number }> {
+}): Promise<{
+  xp: number;
+  coins: number;
+  achievements: playerAchievementDetails[];
+}> {
   // Run initial database queries in parallel
 
   const achievementsToGrant = [];
@@ -292,6 +318,7 @@ async function computeAchievements(input: {
           },
         })
       : [];
+
   console.timeEnd("thirdFetch");
 
   const coins = newlyCreatedAchievements.reduce(
@@ -303,5 +330,5 @@ async function computeAchievements(input: {
     0
   );
 
-  return { xp, coins };
+  return { xp, coins, achievements: newlyCreatedAchievements };
 }
