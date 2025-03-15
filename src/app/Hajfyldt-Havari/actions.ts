@@ -41,6 +41,8 @@ export async function uploadScore(
     Math.floor(data.score / 10) + Math.floor(data.obsticlesAvoided / 10);
 
   // Remove separate query for existingEntry and include in Promise.all
+  console.time("totalFetch");
+
   console.time("firstFetch");
   const [
     leaderboardResult,
@@ -48,7 +50,7 @@ export async function uploadScore(
     gameStatsSum,
     gameCountDeadAtFirstObstacle,
     gameSession, // Move write operation last
-  ] = await Promise.all([
+  ] = await prisma.$transaction([
     prisma.leaderboard.findUnique({
       where: {
         gameId_playerId: { gameId: GAME_ID, playerId: session.user.id },
@@ -136,6 +138,7 @@ export async function uploadScore(
   revalidatePath("/", "layout");
   revalidatePath("/Hajfyldt-Havari/*", "page");
   console.timeEnd("revalidateCache");
+  console.timeEnd("totalFetch");
   return gameSession;
 }
 

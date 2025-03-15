@@ -2,9 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import GitHubProvider from "next-auth/providers/github";
 import NextAuth, { NextAuthConfig } from "next-auth";
-import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
 
 export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -17,15 +15,6 @@ export const authOptions: NextAuthConfig = {
       clientId: process.env.GITHUB_ID ?? "",
       clientSecret: process.env.GITHUB_SECRET ?? "",
     }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-    }),
-    // MicrosoftEntraID({
-    //   clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-    //   clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-    //   issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
-    // }),
   ],
   session: {
     strategy: "jwt",
