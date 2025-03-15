@@ -8,14 +8,6 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/navBar/mainSideBar";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
 import { prisma } from "@/lib/prisma";

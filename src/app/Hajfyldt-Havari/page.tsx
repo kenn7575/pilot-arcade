@@ -223,8 +223,6 @@ export default function Game() {
           };
 
           uploadScore(sailorGameResultInput).then((result) => {
-            console.log("🚀 ~ uploadScore ~ result:", result);
-
             if (result?.id) {
               // Navigate to results page with session ID
               window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
@@ -469,7 +467,7 @@ export default function Game() {
             {isPlaying && !gameOver && (
               <div
                 ref={controlsRef}
-                className="flex justify-between px-4 sm:hidden no-select mt-4"
+                className="flex justify-between px-4 sm:hidden no-select  mb-8"
                 onTouchStart={(e) =>
                   e.target === controlsRef.current && e.preventDefault()
                 }

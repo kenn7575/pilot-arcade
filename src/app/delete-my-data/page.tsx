@@ -16,18 +16,27 @@ export default function Page() {
           Proces for sletning af konto
         </h2>
         <p className="mb-2">
-          For at slette din konto hos [Indsæt projektnavn/virksomhedsnavn],
-          bedes du følge nedenstående procedure:
+          For at slette din konto hos Pilot Arcade, bedes du følge nedenstående
+          procedure:
         </p>
         <ol className="list-decimal ml-6 mb-4">
           <li className="mb-1">
-            Send en e-mail til [Indsæt kontakt e-mail] med emnet "Anmodning om
-            kontosletning"
+            Send en e-mail til{" "}
+            <a
+              href="mailto:kko@danpilot.dk?subject=Anmodning om kontosletning"
+              className="text-primary"
+            >
+              {" "}
+              kko@danpilot.dk
+            </a>{" "}
+            med emnet "Anmodning om kontosletning"
           </li>
           <li className="mb-1">
             Angiv den e-mailadresse, der er knyttet til din konto
           </li>
-          <li className="mb-1">Vi behandler din anmodning inden for 30 dage</li>
+          <li className="mb-1">
+            Vi behandler din anmodning inden for 30 dage, ofte inden for 3 dage
+          </li>
         </ol>
       </section>
 
@@ -74,12 +83,16 @@ export default function Page() {
         <h2 className="text-2xl font-semibold mb-3">Kontakt</h2>
         <p className="mb-4">
           Hvis du har spørgsmål vedrørende sletning af din konto, kan du
-          kontakte os på [Indsæt kontaktoplysninger].
+          kontakte os på
+          <a href="mailto:kko@danpilot.dk" className="text-primary">
+            {" "}
+            kko@danpilot.dk
+          </a>
         </p>
       </section>
 
       <footer className="text-sm text-gray-600 mt-8">
-        Sidst opdateret: [Indsæt dato]
+        Sidst opdateret: 13. Marts 2025
       </footer>
     </div>
   );

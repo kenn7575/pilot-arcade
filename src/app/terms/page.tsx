@@ -40,8 +40,8 @@ export default function TermsPage() {
         <h2 className="text-xl font-bold mb-2">4. Intellektuel ejendomsret</h2>
         <p className="mb-2">
           Tjenesten og dens oprindelige indhold, funktioner og funktionalitet
-          ejes af [Indsæt projektnavn/virksomhedsnavn] og er beskyttet af
-          ophavsret og andre immaterielle rettigheder.
+          ejes af Pilot Arcade og er beskyttet af ophavsret og andre
+          immaterielle rettigheder.
         </p>
       </section>
 
@@ -57,9 +57,9 @@ export default function TermsPage() {
       <section className="mb-4">
         <h2 className="text-xl font-bold mb-2">6. Begrænsning af ansvar</h2>
         <p className="mb-2">
-          Under ingen omstændigheder vil [Indsæt projektnavn/virksomhedsnavn]
-          være ansvarlig for nogen form for tab eller skade, der måtte opstå som
-          følge af brugen af tjenesten.
+          Under ingen omstændigheder vil Pilot Arcade være ansvarlig for nogen
+          form for tab eller skade, der måtte opstå som følge af brugen af
+          tjenesten.
         </p>
       </section>
 
@@ -94,7 +94,11 @@ export default function TermsPage() {
         <h2 className="text-xl font-bold mb-2">10. Kontakt</h2>
         <p className="mb-2">
           Hvis du har spørgsmål vedrørende disse betingelser, kontakt os
-          venligst på [Indsæt kontaktoplysninger].
+          venligst på{" "}
+          <a href="mailto:kko@danpilot.dk" className="text-primary">
+            {" "}
+            kko@danpilot.dk
+          </a>
         </p>
       </section>
 

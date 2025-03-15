@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
-export interface newsFeedItem {
+export interface NewsFeedItem {
   title: string;
   playerName: string;
   description: string;
@@ -11,8 +11,8 @@ export interface newsFeedItem {
   type: "Highscore" | "Achievement";
 }
 
-export async function GetNewsFeed() {
-  let newsFeedItems: newsFeedItem[] = [];
+export async function getNewsFeed() {
+  let newsFeedItems: NewsFeedItem[] = [];
 
   // Group by game and get only the top score for each game
   const [newHighScores, playerAchievement] = await Promise.all([

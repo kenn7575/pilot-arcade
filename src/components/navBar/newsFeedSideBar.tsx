@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -13,20 +14,25 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import { GetNewsFeed, newsFeedItem } from "../actions/GetNewsFeed";
+import { getNewsFeed, NewsFeedItem } from "../actions/GetNewsFeed";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
+import { get } from "http";
 
 export function GetGameStats() {
-  const [newsFeedItems, setNewsFeedItems] = useState<newsFeedItem[]>([]);
+  const [newsFeedItems, setNewsFeedItems] = useState<NewsFeedItem[]>([]);
 
   useEffect(() => {
-    GetNewsFeed().then((newsFeed) => {
+    getNewsFeed().then((newsFeed) => {
       setNewsFeedItems(newsFeed);
     });
   }, []);
+
+  if (!newsFeedItems.length) {
+    return;
+  }
   return (
-    <Sidebar collapsible="none" className="hidden flex-1 md:flex">
+    <Sidebar collapsible="none" className={`hidden flex-1 md:flex `}>
       <SidebarContent>
         <SidebarGroup className="px-0">
           <SidebarGroupContent>

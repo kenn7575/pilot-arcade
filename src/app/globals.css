@@ -52,7 +52,7 @@
   --card-foreground: oklch(14% 0 290);
   --popover: oklch(100% 0 0);
   --popover-foreground: oklch(14% 0 290);
-  --primary:oklch(60.02% 0.2323 24.1);
+  --primary: oklch(60.02% 0.2323 24.1);
   --primary-foreground: oklch(100% 0 0);
   --secondary: oklch(97% 0 290);
   --secondary-foreground: oklch(21% 0 290);
@@ -84,33 +84,30 @@
 }
 
 .dark {
-  
-   
-   
-    --background: oklch(15% 0 49);
-    --foreground: oklch(96% 0 0);
-    --card: oklch(22.6% 1.5% 56.043);
-    --card-foreground: oklch(96% 0 0);
-    --popover: oklch(20% 0 0);
-    --popover-foreground: oklch(96% 0 0);
-    --primary: oklch(60.02% 0.2323 24.1);
-    --primary-foreground:oklch(100% 0 0);
-    --secondary: oklch(27% 0 290);
-    --secondary-foreground: oklch(98% 0 0);
-    --muted: oklch(27% 0 0);
-    --muted-foreground: oklch(71% 0 290);
-    --accent: oklch(27% 0 34);
-    --accent-foreground: oklch(98% 0 0);
-    --destructive: oklch(40% 0.1 26);
-    --destructive-foreground: oklch(97% 0 17);
-    --border: oklch(27% 0 290);
-    --input: oklch(27% 0 290);
-    --ring: oklch(59% 0.2 18);
-    --chart-1: oklch(53% 0.2 260);
-    --chart-2: oklch(70% 0.1 170);
-    --chart-3: oklch(72% 0.1 61);
-    --chart-4: oklch(62% 0.2 310);
-    --chart-5: oklch(61% 0.2 6.4);
+  --background: oklch(15% 0 49);
+  --foreground: oklch(96% 0 0);
+  --card: oklch(22.6% 1.5% 56.043);
+  --card-foreground: oklch(96% 0 0);
+  --popover: oklch(20% 0 0);
+  --popover-foreground: oklch(96% 0 0);
+  --primary: oklch(60.02% 0.2323 24.1);
+  --primary-foreground: oklch(100% 0 0);
+  --secondary: oklch(27% 0 290);
+  --secondary-foreground: oklch(98% 0 0);
+  --muted: oklch(27% 0 0);
+  --muted-foreground: oklch(71% 0 290);
+  --accent: oklch(27% 0 34);
+  --accent-foreground: oklch(98% 0 0);
+  --destructive: oklch(40% 0.1 26);
+  --destructive-foreground: oklch(97% 0 17);
+  --border: oklch(27% 0 290);
+  --input: oklch(27% 0 290);
+  --ring: oklch(59% 0.2 18);
+  --chart-1: oklch(53% 0.2 260);
+  --chart-2: oklch(70% 0.1 170);
+  --chart-3: oklch(72% 0.1 61);
+  --chart-4: oklch(62% 0.2 310);
+  --chart-5: oklch(61% 0.2 6.4);
 
   --sidebar: oklch(24.7% 1.75% 48.414);
   --sidebar-foreground: oklch(0.984 0.003 247.858);
@@ -129,7 +126,6 @@
   body {
     @apply bg-background text-foreground;
   }
- 
 }
 @keyframes wave {
   from {
@@ -138,18 +134,17 @@
   to {
     transform: translateY(1000px);
   }
-  
 }
-.min-h-view{
-  min-height: calc(100dvh - 3.5rem)
+.min-h-view {
+  min-height: calc(100dvh - 3.5rem);
 }
 /* Add these rules to your global CSS */
 .no-select {
   -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none;   /* Safari */
+  -webkit-user-select: none; /* Safari */
   -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
-  user-select: none;           /* Standard syntax */
-  touch-action: manipulation;  /* Disable double-tap to zoom */
+  user-select: none; /* Standard syntax */
+  touch-action: manipulation; /* Disable double-tap to zoom */
 }
 
 .game-container {
@@ -161,41 +156,44 @@
   min-width: min(700px, 100%);
 }
 
-.gold{
-  background-image: linear-gradient(
-	10deg,
-	#462523aa 0,
-  #cb9b51 22%, 
-	#f6e27a 45%,
-	#F7E9A1 50%,
-	#f6e27a 55%,
-	#cb9b51 78%,
-	#462523aa 100%
-	);
-}
-.silver{
+.gold {
   background-image: linear-gradient(
     10deg,
-     #999a 5%,
-     #ccc 15%,
-     #ddd 45%,
-     #fff 50%,
-     #ddd 60%,
+    #462523aa 0,
+    #cb9b51 22%,
+    #f6e27a 45%,
+    #f7e9a1 50%,
+    #f6e27a 55%,
+    #cb9b51 78%,
+    #462523aa 100%
+  );
+}
+.silver {
+  background-image: linear-gradient(
+    10deg,
+    #999a 5%,
+    #ccc 15%,
+    #ddd 45%,
+    #fff 50%,
+    #ddd 60%,
     #ccc 80%,
     #999a 90%
-    );
+  );
 }
 
 .bronze {
-  background:
-linear-gradient(
-  10deg,
-  #732100aa 5%,
-  #a14521 15%,
-  #ca7345 30%,
-  #ffdeca 50%,
-  #ca7345 70%,
-  #a14521 85%,
-  #732100aa 95%
-);
+  background: linear-gradient(
+    10deg,
+    #732100aa 5%,
+    #a14521 15%,
+    #ca7345 30%,
+    #ffdeca 50%,
+    #ca7345 70%,
+    #a14521 85%,
+    #732100aa 95%
+  );
+}
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }

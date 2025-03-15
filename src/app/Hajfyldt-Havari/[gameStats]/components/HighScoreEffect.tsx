@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import Image from "next/image";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { set } from "zod";
 
 export function HighScoreEffect() {
   useEffect(() => {

@@ -19,9 +19,9 @@ export default async function Page() {
       },
     },
   });
-  console.log("🚀 ~ Page ~ games:", `/games/${games[0].imageUrl}`);
+
   return (
-    <div className="flex flex-wrap gap-4 m-4 justify-center xl:justify-start">
+    <div className="flex flex-wrap gap-4 my-4 px-2 justify-center xl:justify-start">
       {games.map((game) => (
         <Card className="w-[350px]" key={game.id}>
           <CardHeader>

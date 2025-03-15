@@ -1,23 +1,21 @@
 "use client";
-
 import { useState } from "react";
-import { GameWithLeaderBoard } from "./page";
-import { Podium } from "./Podium";
-import { RankTable } from "./tableList";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { GamesWithAchievements } from "./page";
+import { ToggleGroup } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { AchievementsGrid } from "./AchievementsGrid";
 
-export function GamePicker({ games }: { games: GameWithLeaderBoard[] }) {
+export function GamePicker({ games }: { games: GamesWithAchievements[] }) {
   if (!games.length) return <div>No games</div>;
   const [selectedGame, setSelectedGame] = useState<string>(games[0]?.id);
 
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center">
       {games.length > 1 && (
         <ToggleGroup
-          className="mt-6 gap-1 mr-auto"
+          className="mt-6 gap-1 mr-auto overflow-x-auto"
           type="single"
           value={selectedGame}
           onValueChange={(value) => value && setSelectedGame(value)}
@@ -47,9 +45,12 @@ export function GamePicker({ games }: { games: GameWithLeaderBoard[] }) {
         </ToggleGroup>
       )}
       <Separator className="my-4" color="foreground" orientation="horizontal" />
-      <div className="w-custom flex flex-col items-center overflow-x-hidden">
-        <Podium game={games.find((game) => game.id === selectedGame)!} />
-        <RankTable game={games.find((game) => game.id === selectedGame)!} />
+      <div className="w-full">
+        <AchievementsGrid
+          achievements={
+            games.find((game) => game.id === selectedGame)?.achievements || []
+          }
+        />
       </div>
     </div>
   );

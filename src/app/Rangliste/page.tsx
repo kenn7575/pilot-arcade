@@ -34,7 +34,7 @@ export default async function Page() {
   });
 
   return (
-    <main className="sm:p-4">
+    <main className="px-2 my-4">
       <section className="text-center">
         <h1
           className={`${ribeyeMarrow.className} text-5xl font-bold text-primary mb-2`}

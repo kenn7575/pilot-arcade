@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { GameWithLeaderBoard } from "./page";
 import {
   Card,
@@ -10,28 +9,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { use, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { formatInitials } from "@/lib/formatInitials";
-import { formatTimeAgo } from "@/lib/dateFormatter";
 import Image from "next/image";
 
 export function Podium({ game }: { game: GameWithLeaderBoard }) {
   const topPlayers = game.Leaderboard.slice(0, 3);
 
   return (
-    <div className="relative flex items-baseline justify-between gap-4  mb-8">
+    <div className="relative flex items-baseline justify-between gap-1  sm:gap-4 overflow-x-scroll mb-8 max-w-full px-2">
       {/* Second Place */}
       {topPlayers.length > 1 && (
-        <Card className="w-56 mt-auto h-80 silver text-slate-900">
+        <Card className="sm:min-w-56 w-56 mt-auto h-80 silver text-slate-900">
           <CardHeader className="text-center p-4 items-center">
             <Avatar className="sm:h-12 sm:w-12 ">
               <AvatarFallback>
                 {formatInitials(topPlayers[1].player.user.name || "^_^")}
               </AvatarFallback>
-              <AvatarImage src={topPlayers[1].player.user.image || ""} />
+              <AvatarImage
+                alt={"profile"}
+                src={topPlayers[1].player.user.image || ""}
+              />
             </Avatar>
             <CardTitle className="text-sm text-pretty ">
               {topPlayers[1].player.user.name}
@@ -50,13 +48,16 @@ export function Podium({ game }: { game: GameWithLeaderBoard }) {
 
       {/* First Place */}
       {topPlayers.length > 0 && (
-        <Card className="w-56 h-96 gold text-amber-950">
+        <Card className="sm:min-w-56 w-56 h-96 gold text-amber-950">
           <CardHeader className="text-center p-4 items-center">
             <Avatar className="sm:h-12 sm:w-12 ">
               <AvatarFallback>
                 {formatInitials(topPlayers[0].player.user.name || "^_^")}
               </AvatarFallback>
-              <AvatarImage src={topPlayers[0].player.user.image || ""} />
+              <AvatarImage
+                alt={"profile"}
+                src={topPlayers[0].player.user.image || ""}
+              />
             </Avatar>
             <CardTitle className="text-pretty">
               {topPlayers[0].player.user.name}
@@ -82,16 +83,18 @@ export function Podium({ game }: { game: GameWithLeaderBoard }) {
           </CardFooter>
         </Card>
       )}
-
       {/* Third Place */}
       {topPlayers.length > 2 && (
-        <Card className="w-56 mt-auto h-72  bronze text-orange-950">
+        <Card className="sm:min-w-56 w-56  mt-auto h-72  bronze text-orange-950">
           <CardHeader className="text-center p-4 items-center">
             <Avatar className="sm:h-12 sm:w-12 ">
               <AvatarFallback>
                 {formatInitials(topPlayers[2].player.user.name || "^_^")}
               </AvatarFallback>
-              <AvatarImage src={topPlayers[2].player.user.image || ""} />
+              <AvatarImage
+                alt={"profile"}
+                src={topPlayers[2].player.user.image || ""}
+              />
             </Avatar>
             <CardTitle className="text-sm text-pretty">
               {topPlayers[2].player.user.name}
