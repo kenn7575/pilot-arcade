@@ -42,6 +42,13 @@ export default async function RootLayout({
         enableSystem
         disableTransitionOnChange
       >
+        <script
+          id="Cookiebot"
+          src="https://consent.cookiebot.com/uc.js"
+          data-cbid="8ed87782-7fec-4647-a83e-1924866721ee"
+          data-blockingmode="auto"
+          type="text/javascript"
+        ></script>
         <SessionProvider session={session}>
           <body className={`antialiased`}>
             <SidebarProvider
