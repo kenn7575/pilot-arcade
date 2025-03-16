@@ -17,6 +17,9 @@ import { uploadScore } from "./actions";
 import { SailorGameResultInput } from "@/lib/types";
 import { ribeye } from "@/lib/fonts";
 import Head from "next/head";
+import { useSession } from "next-auth/react";
+import { set } from "zod";
+import { toast } from "sonner";
 
 // Base game dimensions - will be scaled responsively
 const BASE_GAME_WIDTH = 600;
@@ -50,10 +53,12 @@ export default function Game() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [distance, setDistance] = useState(0); // distance in pixels
   const [startedAt, setStartedAt] = useState(new Date());
+  const [isUploading, setIsUploading] = useState(false);
   const gameLoopRef = useRef<number | null>(null);
   const keysPressed = useRef<{ [key: string]: boolean }>({});
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
+  const { data: session, status } = useSession();
 
   // For mobile controls
   const leftButtonPressed = useRef(false);
@@ -213,6 +218,9 @@ export default function Game() {
         setScore((prev) => prev + 1);
         setDistance((prev) => prev + (BOAT_SPEED / 60) * KNOTS_CONVERSION); // update distance
 
+        console.log(session, "session");
+        console.log(status, "status");
+
         if (checkCollision(boatPosition, obstacles)) {
           let sailorGameResultInput: SailorGameResultInput = {
             score: score,
@@ -222,12 +230,25 @@ export default function Game() {
             startedPlayingAt: startedAt,
           };
 
-          uploadScore(sailorGameResultInput).then((result) => {
-            if (result?.id) {
-              // Navigate to results page with session ID
-              window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
-            }
-          });
+          if (status === "authenticated") {
+            setIsUploading(true);
+            toast.promise(
+              Promise.all([
+                uploadScore(sailorGameResultInput).then((result) => {
+                  if (result?.id) {
+                    // Navigate to results page with session ID
+                    window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
+                  }
+                }),
+              ]),
+              {
+                loading: "Gemmer dine spildata...",
+                duration: 2000,
+                dismissible: true,
+              }
+            );
+          }
+
           setGameOver(true);
           setIsPlaying(false);
         }
@@ -377,7 +398,14 @@ export default function Game() {
                 src={"/games/Hajfyldt-Havari/sprites/sea.jpg"}
                 width={600}
                 height={600}
-                className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                className={`absolute inset-0 w-full h-full object-cover rounded-lg ${
+                  isUploading ? "opacity-50" : ""
+                }`}
+              />
+              <div
+                className={`${
+                  isUploading ? "" : "!hidden"
+                } loader absolute left-1/2 top-1/2 -translate-1/2 w-full h-full `}
               />
               <div
                 className="relative rounded-lg overflow-hidden mx-auto no-select"
@@ -449,16 +477,12 @@ export default function Game() {
             <div className="mt-4 flex justify-center gap-4">
               {!isPlaying && (
                 <Button
+                  disabled={isUploading}
                   onClick={startGame}
                   variant="default"
                   className="px-8 py-2 text-lg"
                 >
                   {gameOver ? "Play Again" : "Start Game"}
-                </Button>
-              )}
-              {gameOver && (
-                <Button onClick={saveHighScore} variant="outline">
-                  Save Score
                 </Button>
               )}
             </div>

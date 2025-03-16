@@ -197,3 +197,24 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
+
+.loader {
+  display: block;
+  width: 200px;
+  height: 200px;
+  flex: 0 0 200px;
+  box-shadow: inset 2px 0 0 white, -2px 0 0 white;
+  animation: spin 1s infinite linear;
+  border-radius: 100%;
+  margin: 0;
+  transform-origin: center;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -3,6 +3,7 @@
 import {
   BadgeCheck,
   Bell,
+  BookMarked,
   ChevronsUpDown,
   CreditCard,
   LogOut,
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
 import { ModeToggle } from "../DarkModeToggle";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -87,23 +89,21 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
+              <div className="flex items-center gap-2 ">
+                <ModeToggle />
+                Tema
+              </div>
+              <DropdownMenuSeparator />
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem asChild>
+                <Link href="Juridisk">
+                  <BookMarked />
+                  Juridisk
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <ModeToggle />
             </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
