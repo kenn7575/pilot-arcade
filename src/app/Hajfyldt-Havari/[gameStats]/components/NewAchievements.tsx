@@ -21,9 +21,7 @@ export function DisplayNewAchievements({
     <>
       {achievements.map((achievement) => (
         <div>
-          <div className="divider h-px bg-gray-200 my-6"></div>
-
-          <h2 className="text-xl font-bold text-blue-900 mb-4">
+          <h2 className="text-xl font-boldtext-primary dark:text-foreground mb-4">
             Nye Præstationer
           </h2>
 

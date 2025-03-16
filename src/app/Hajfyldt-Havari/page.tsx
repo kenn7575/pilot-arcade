@@ -321,49 +321,49 @@ export default function Game() {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <div
-        className="bg-muted flex items-end justify-center min-h-view game-container no-select"
+      <main
+        className="bg-background flex items-end justify-center min-h-view game-container no-select sm:py-2"
         ref={gameContainerRef}
         onTouchStart={(e) =>
           e.target === gameContainerRef.current && e.preventDefault()
         }
       >
-        <div className="bg-white p-4 h-full flex flex-col justify-between sm:p-8 rounded-lg shadow-xl w-full max-w-3xl no-select">
+        <div className="bg-background p-4 h-full flex flex-col justify-between sm:p-8 rounded-lg w-full max-w-3xl no-select">
           <div className="mb-4 text-center">
             <h1
-              className={`${ribeye.className} text-3xl font-bold text-blue-900 mb-4`}
+              className={`${ribeye.className} text-3xl font-bold text-primary mb-4 dark:text-foreground`}
             >
               Hajfyldt Havari
             </h1>
 
             {/* Game Stats UI */}
             <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="bg-blue-50 p-3 rounded-lg flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 text-blue-700">
+              <div className="bg-primary/35 p-3 rounded-lg flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2 text-foreground">
                   <Trophy size={18} />
                   <span className="font-semibold">Score</span>
                 </div>
-                <span className="text-2xl font-bold text-blue-900">
+                <span className="text-2xl font-bold text-foreground">
                   {score}
                 </span>
               </div>
 
-              <div className="bg-blue-50 p-3 rounded-lg flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 text-blue-700">
+              <div className="bg-primary/35 p-3 rounded-lg flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2  text-foreground">
                   <Anchor size={18} />
                   <span className="font-semibold">Sømil</span>
                 </div>
-                <span className="text-2xl font-bold text-blue-900">
+                <span className="text-2xl font-bold  text-foreground">
                   {distanceInMiles}
                 </span>
               </div>
 
-              <div className="bg-blue-50 p-3 rounded-lg flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 text-blue-700">
+              <div className="bg-primary/35 p-3 rounded-lg flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2  text-foreground">
                   <Gauge size={18} />
                   <span className="font-semibold">Tid</span>
                 </div>
-                <span className="text-2xl font-bold text-blue-900">
+                <span className="text-2xl font-bold  text-foreground">
                   {timeFormatted}
                 </span>
               </div>
@@ -516,7 +516,7 @@ export default function Game() {
             )} */}
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

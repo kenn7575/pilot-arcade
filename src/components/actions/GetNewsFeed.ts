@@ -6,7 +6,7 @@ export interface NewsFeedItem {
   title: string;
   playerName: string;
   description: string;
-  date: string;
+  date: Date;
   gameName: string;
   type: "Highscore" | "Achievement";
 }
@@ -83,7 +83,7 @@ export async function getNewsFeed() {
       title: "Ny highscore!",
       playerName: score.player.user.name || "Unknown",
       description: `Denne spiller har sat en ny highscore i ${score.game.title} på ${score.score}.`,
-      date: score.updatedAt.toDateString(),
+      date: score.updatedAt,
       gameName: score.game.title,
       type: "Highscore",
     });
@@ -94,7 +94,7 @@ export async function getNewsFeed() {
       title: achievement.achievement.name,
       playerName: achievement.player.user.name || "Unknown",
       description: "Denne spiller har opnået en ny præstation!",
-      date: achievement.unlockedAt.toDateString(),
+      date: achievement.unlockedAt,
       gameName: achievement.achievement.game.title,
       type: "Achievement",
     });

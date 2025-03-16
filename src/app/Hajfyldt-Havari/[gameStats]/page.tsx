@@ -112,11 +112,11 @@ export default async function GameResultsPage({
   };
 
   return (
-    <main className="min-h-view bg-gradient-to-b from-muted flex justify-center sm:p-4">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-lg">
+    <main className="min-h-view bg-background flex justify-center sm:p-4">
+      <div className="bg-background p-6 sm:p-8 rounded-lg w-full max-w-lg">
         <div className="text-center">
           <h1
-            className={`${ribeye.className} text-3xl font-bold text-blue-900 mb-4`}
+            className={`${ribeye.className} text-3xl font-bold text-primary dark:text-foreground mb-4`}
           >
             {results.isHighScore ? "Ny personlig rekord!" : "Game Over!"}
           </h1>
@@ -125,42 +125,42 @@ export default async function GameResultsPage({
           {results.isHighScore && <HighScoreEffect />}
 
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 justify-center">
+            <div className="bg-primary/45 p-3 rounded-lg">
+              <div className="flex items-center gap-2 text-foreground justify-center">
                 <Trophy size={18} />
                 <span className="font-semibold">Score</span>
               </div>
-              <span className="text-2xl font-bold text-blue-900 block">
+              <span className="text-2xl font-bold text-foreground block">
                 {results.score}
               </span>
             </div>
 
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 justify-center">
+            <div className="bg-primary/45 p-3 rounded-lg">
+              <div className="flex items-center gap-2 text-foreground justify-center">
                 <Anchor size={18} />
                 <span className="font-semibold">Sømil</span>
               </div>
-              <span className="text-2xl font-bold text-blue-900">
+              <span className="text-2xl font-bold text-foreground">
                 {results.distance}
               </span>
             </div>
 
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 justify-center">
+            <div className="bg-primary/45 p-3 rounded-lg">
+              <div className="flex items-center gap-2 text-foreground justify-center">
                 <Clock size={18} />
                 <span className="font-semibold">Tid</span>
               </div>
-              <span className="text-2xl font-bold text-blue-900">
+              <span className="text-2xl font-bold text-foreground">
                 {formatTime(results.timeSurvived ?? 0)}
               </span>
             </div>
 
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700 justify-center">
+            <div className="bg-primary/45 p-3 rounded-lg">
+              <div className="flex items-center gap-2 text-foreground justify-center">
                 <Activity size={18} />
                 <span className="font-semibold">Antal hajer undgået</span>
               </div>
-              <span className="text-2xl font-bold text-blue-900">
+              <span className="text-2xl font-bold text-foreground">
                 {results.obstaclesAvoided}
               </span>
             </div>
@@ -168,7 +168,7 @@ export default async function GameResultsPage({
 
           <div className="divider h-px bg-gray-200 my-6"></div>
 
-          <h2 className="text-xl font-bold text-blue-900 mb-4">
+          <h2 className="text-xl font-bold text-primary dark:text-foreground mb-4">
             Din Belønning
           </h2>
 

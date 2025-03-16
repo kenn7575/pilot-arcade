@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import { Command, Crown, Gamepad2, Medal, Settings } from "lucide-react";
-
 import { NavUser } from "@/components/navBar/sideBarUserMenu";
-import { Label } from "@/components/ui/label";
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +16,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import Link from "next/link";
 import { GetGameStats } from "./newsFeedSideBar";
@@ -42,18 +39,9 @@ const links = [
     icon: Medal,
     isActive: false,
   },
-  // {
-  //   title: "Indstillinger",
-  //   url: "Indstillinger",
-  //   icon: Settings,
-  //   isActive: false,
-  // },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
-  const [activeItem, setActiveItem] = React.useState(links[0]);
   const { setOpenMobile } = useSidebar();
 
   // Function to handle link clicks - will close the sidebar
@@ -67,9 +55,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
       {...props}
     >
-      {/* This is the first sidebar */}
-      {/* We disable collapsible and adjust width to icon. */}
-      {/* This will make the sidebar appear as icons. */}
       <Sidebar
         collapsible="none"
         className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"

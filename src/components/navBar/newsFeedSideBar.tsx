@@ -17,7 +17,7 @@ import {
 import { getNewsFeed, NewsFeedItem } from "../actions/GetNewsFeed";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
-import { get } from "http";
+import { formatTimeAgo } from "@/lib/dateFormatter";
 
 export function GetGameStats() {
   const [newsFeedItems, setNewsFeedItems] = useState<NewsFeedItem[]>([]);
@@ -39,7 +39,7 @@ export function GetGameStats() {
             {newsFeedItems.map((item) => (
               <a
                 href="#"
-                key={item.date}
+                key={item.date.toISOString()}
                 className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               >
                 <div className="flex justify-between w-full mb-1">
@@ -56,7 +56,9 @@ export function GetGameStats() {
                 </div>
                 <div className="flex w-full items-center gap-2">
                   <span>{item.playerName}</span>{" "}
-                  <span className="ml-auto text-xs">{item.date}</span>
+                  <span className="ml-auto text-xs">
+                    {formatTimeAgo(item.date)}
+                  </span>
                 </div>
                 <span className="font-medium">{item.title}</span>
                 <span className="line-clamp-2 w-[260px] whitespace-break-spaces text-xs">
