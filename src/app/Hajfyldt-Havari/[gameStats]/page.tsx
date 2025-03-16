@@ -30,10 +30,13 @@ export default async function GameResultsPage({
     achievements: playerAchievementDetails[];
     isHighScore: boolean;
   }
+  let cachedData: GameResult | undefined;
 
-  const cachedData = JSON.parse(cookieStore.get(sessionId)!.value) as
-    | GameResult
-    | undefined;
+  try {
+    cachedData = JSON.parse(cookieStore.get(sessionId)!.value) as
+      | GameResult
+      | undefined;
+  } catch (error) {}
 
   let fetchedData: GameResult | undefined;
 
