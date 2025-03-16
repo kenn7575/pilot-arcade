@@ -37,8 +37,11 @@ export async function uploadScore(
 
   const coins =
     Math.floor(data.score / 1000) + Math.floor(data.obsticlesAvoided / 10);
+  console.log("🚀 ~ coins:", coins);
   const xp =
-    Math.floor(data.score / 10) + Math.floor(data.obsticlesAvoided / 10);
+    Math.floor(data.score / 100) + Math.floor(data.obsticlesAvoided / 10);
+  console.log("🚀 ~ xp:", xp);
+  console.log("🚀 ~ score backend:", data.score);
 
   // Remove separate query for existingEntry and include in Promise.all
   console.time("totalFetch");
@@ -107,6 +110,7 @@ export async function uploadScore(
 
   console.time("fourthFetch");
   // Update player's coins and xp
+
   await Promise.all([
     prisma.player.update({
       where: {
@@ -156,7 +160,7 @@ export async function uploadScore(
       achievements: achievements,
       isHighScore: !leaderboardResult || data.score > leaderboardResult.score,
     }),
-    expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+    expires: new Date(Date.now() + 1000 * 60), // 1 minute - we risk getting an 431 error if we save too much data
     httpOnly: true,
     sameSite: "strict",
   });

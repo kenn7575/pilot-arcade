@@ -90,10 +90,10 @@ export default async function GameResultsPage({
   // Calculate rewards
   const coins =
     Math.floor((data.gameSession.gameStats?.score ?? 0) / 1000) +
-    Math.floor(data.gameSession.gameStats?.obstaclesAvoided ?? 0 / 10);
+    Math.floor((data.gameSession.gameStats?.obstaclesAvoided ?? 0) / 10);
   const xp =
     Math.floor((data.gameSession.gameStats?.score ?? 0) / 100) +
-    Math.floor(data.gameSession.gameStats?.obstaclesAvoided ?? 0 / 10);
+    Math.floor((data.gameSession.gameStats?.obstaclesAvoided ?? 0) / 10);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

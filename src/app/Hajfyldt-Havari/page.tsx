@@ -218,9 +218,6 @@ export default function Game() {
         setScore((prev) => prev + 1);
         setDistance((prev) => prev + (BOAT_SPEED / 60) * KNOTS_CONVERSION); // update distance
 
-        console.log(session, "session");
-        console.log(status, "status");
-
         if (checkCollision(boatPosition, obstacles)) {
           let sailorGameResultInput: SailorGameResultInput = {
             score: score,
@@ -233,17 +230,16 @@ export default function Game() {
           if (status === "authenticated") {
             setIsUploading(true);
             toast.promise(
-              Promise.all([
-                uploadScore(sailorGameResultInput).then((result) => {
-                  if (result?.id) {
-                    // Navigate to results page with session ID
-                    window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
-                  }
-                }),
-              ]),
+              uploadScore(sailorGameResultInput).then((result) => {
+                if (result?.id) {
+                  // Navigate to results page with session ID
+                  window.location.href = `/Hajfyldt-Havari/results?sessionId=${result.id}`;
+                }
+              }),
+
               {
                 loading: "Gemmer dine spildata...",
-                duration: 2000,
+                duration: 6000,
                 dismissible: true,
               }
             );
