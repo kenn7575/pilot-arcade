@@ -54,6 +54,7 @@ export default function Game() {
   const [distance, setDistance] = useState(0); // distance in pixels
   const [startedAt, setStartedAt] = useState(new Date());
   const [isUploading, setIsUploading] = useState(false);
+  const [sharkSpeed, setSharkSpeed] = useState(GAME_SPEED); // Pf6ca
   const gameLoopRef = useRef<number | null>(null);
   const keysPressed = useRef<{ [key: string]: boolean }>({});
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -165,6 +166,7 @@ export default function Game() {
     setIsPlaying(true);
     setStartedAt(new Date());
     setDistance(0); // reset distance
+    setSharkSpeed(GAME_SPEED); // Pf6ca
     keysPressed.current = {};
     leftButtonPressed.current = false;
     rightButtonPressed.current = false;
@@ -192,7 +194,7 @@ export default function Game() {
           const updatedObstacles = prevObstacles
             .map((obstacle) => ({
               ...obstacle,
-              y: obstacle.y + GAME_SPEED * scaleRatio,
+              y: obstacle.y + sharkSpeed * scaleRatio, // Pabbb
             }))
             .filter((obstacle) => {
               const isVisible = obstacle.y < gameHeight;
@@ -268,6 +270,7 @@ export default function Game() {
     gameWidth,
     gameHeight,
     scaleRatio,
+    sharkSpeed, // P66d1
   ]);
 
   // Add useEffect to prevent default touch behaviors globally when game is active
@@ -298,6 +301,17 @@ export default function Game() {
       };
     }
   }, [isPlaying]);
+
+  // Increment sharkSpeed every second
+  useEffect(() => {
+    if (isPlaying && !gameOver) {
+      const speedIncrementInterval = setInterval(() => {
+        setSharkSpeed((prevSpeed) => prevSpeed + 0.02); // P66d1
+      }, 1000);
+
+      return () => clearInterval(speedIncrementInterval);
+    }
+  }, [isPlaying, gameOver]);
 
   const distanceInMiles = (distance / PIXELS_PER_MILE).toFixed(3);
   // Calculate elapsed time in minutes:seconds format
